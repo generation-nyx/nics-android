@@ -1,0 +1,2 @@
+#!/bin/bash
+./gradlew sonarqube -Dsonar.login=admin -Dsonar.password=admin

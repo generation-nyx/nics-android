@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_panel_navigation"
+    app:startDestination="@id/markupPanelDefaultFragment">
+
+    <fragment
+        android:id="@+id/geocodingFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.GeocodingFragment"
+        android:label="GeocodingFragment"
+        tools:layout="@layout/fragment_geocoding">
+        <argument
+            android:name="selectionPoint"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+    </fragment>
+    <fragment
+        android:id="@+id/distanceCalculatorFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.DistanceCalculatorFragment"
+        android:label="DistanceCalculatorFragment"
+        tools:layout="@layout/fragment_distance_calculator">
+    </fragment>
+    <fragment
+        android:id="@+id/markupPanelDefaultFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupPanelDefaultFragment"
+        android:label="MarkupPanelDefaultFragment"
+        tools:layout="@layout/fragment_markup_panel_default">
+        <action
+            android:id="@+id/editSymbol"
+            app:destination="@id/markupEditSymbolFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editCircle"
+            app:destination="@id/markupEditCircleFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editFireline"
+            app:destination="@id/markupEditFirelineFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editFreeHandPolygon"
+            app:destination="@id/markupEditFreeHandPolygonFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/editFreeHandPolyline"
+            app:destination="@id/markupEditFreeHandPolylineFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/editLine"
+            app:destination="@id/markupEditLineFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editPolygon"
+            app:destination="@id/markupEditPolygonFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editText"
+            app:destination="@id/markupEditTextFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+        <action
+            android:id="@+id/editRectangle"
+            app:destination="@id/markupEditRectangleFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditSymbolFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditSymbolFragment"
+        android:label="MarkupEditSymbolFragment"
+        tools:layout="@layout/fragment_markup_symbol_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openSymbolPicker"
+            app:destination="@id/symbolPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditCircleFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditCircleFragment"
+        android:label="MarkupEditCircleFragment"
+        tools:layout="@layout/fragment_markup_circle_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditFirelineFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditFirelineFragment"
+        android:label="MarkupEditFirelineFragment"
+        tools:layout="@layout/fragment_markup_fireline_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditFreeHandPolygonFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditFreeHandPolygonFragment"
+        android:label="MarkupEditFreeHandPolygonFragment"
+        tools:layout="@layout/fragment_markup_free_hand_polygon_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditFreeHandPolylineFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditFreeHandPolylineFragment"
+        android:label="MarkupEditFreeHandPolylineFragment"
+        tools:layout="@layout/fragment_markup_free_hand_polyline_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditLineFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditLineFragment"
+        android:label="MarkupEditLineFragment"
+        tools:layout="@layout/fragment_markup_line_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditPolygonFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditPolygonFragment"
+        android:label="MarkupEditPolygonFragment"
+        tools:layout="@layout/fragment_markup_polygon_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditRectangleFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditRectangleFragment"
+        android:label="MarkupEditRectangleFragment"
+        tools:layout="@layout/fragment_markup_rectangle_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/markupEditTextFragment"
+        android:name="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditTextFragment"
+        android:label="MarkupEditTextFragment"
+        tools:layout="@layout/fragment_markup_text_edit">
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <action
+            android:id="@+id/openColorPicker"
+            app:destination="@id/colorPickerDialog"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <dialog
+        android:id="@+id/symbolPickerDialog"
+        android:name="edu.mit.ll.nics.android.ui.dialogs.SymbolPickerDialog"
+        android:label="SymbolPickerDialog"
+        tools:layout="@layout/dialog_symbol_picker"/>
+    <dialog
+        android:id="@+id/colorPickerDialog"
+        android:name="edu.mit.ll.nics.android.ui.dialogs.ColorPickerDialog"
+        android:label="ColorPickerDialog"
+        tools:layout="@layout/dialog_color_picker"/>
+    <action
+        android:id="@+id/geocoding"
+        app:destination="@id/geocodingFragment"/>
+    <action
+        android:id="@+id/distanceCalculator"
+        app:destination="@id/distanceCalculatorFragment"/>
+</navigation>

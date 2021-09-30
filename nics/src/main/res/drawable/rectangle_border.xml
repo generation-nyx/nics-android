@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--|~^~|(c) Copyright, 2008-2020 Massachusetts Institute of Technology.
+ |~^~|
+ |~^~|This material may be reproduced by or for the
+ |~^~|U.S. Government pursuant to the copyright license
+ |~^~|under the clause at DFARS 252.227-7013 (June, 1995).
+ |~^~|-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/transparent" />
+    <padding
+        android:left="5dp"
+        android:right="5dp"
+        android:top="5dp"
+        android:bottom="5dp" />
+    <stroke
+        android:width="2dp"
+        android:color="#ffffff" />
+</shape>

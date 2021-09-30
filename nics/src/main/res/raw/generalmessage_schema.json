@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "type": "meta",
+    "name": "General Message"
+  },
+  "location": {
+    "display_name": "sr_location_displayname",
+    "type": "coordinate",
+    "id": "0",
+    "priority": "0"
+  },
+  "message": {
+    "display_name": "sr_message_displayname",
+    "type": "string",
+    "id": "1",
+    "priority": "1",
+    "hint": "sr_message_hint"
+  },
+  "fullpath": {
+    "display_name": "",
+    "type": "image_selector",
+    "id": "2",
+    "priority": "2",
+    "default": "0"
+  }
+}

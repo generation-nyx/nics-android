@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "type": "meta",
+    "name": "Gar Report"
+  },
+  "gar_info": {
+    "display_name": "gar_gar_info_displayname",
+    "type": "section",
+    "id": "1",
+    "priority": "1",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "divgroupstaging",
+        "physicalLocation",
+        "coordinate",
+        "requestDate"
+      ]
+    }
+  },
+  "divgroupstaging": {
+    "display_name": "gar_divgroupstaging_displayname",
+    "type": "string",
+    "id": "2",
+    "priority": "2"
+  },
+  "physicalLocation": {
+    "display_name": "gar_physicallocation_displayname",
+    "type": "string",
+    "id": "3",
+    "priority": "3"
+  },
+  "coordinate": {
+    "display_name": "gar_coordinate_displayname",
+    "type": "coordinate",
+    "id": "4",
+    "priority": "4"
+  },
+  "requestDate": {
+    "display_name": "gar_timetaken_displayname",
+    "type": "string",
+    "id": "5",
+    "priority": "5"
+  },
+  "supervision": {
+    "display_name": "gar_supervision_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "6",
+    "priority": "6"
+  },
+  "planning": {
+    "display_name": "gar_planning_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "7",
+    "priority": "7"
+  },
+  "teamSelect": {
+    "display_name": "gar_teamselection_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "8",
+    "priority": "8"
+  },
+  "teamFit": {
+    "display_name": "gar_teamfitness_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "9",
+    "priority": "9"
+  },
+  "environment": {
+    "display_name": "gar_environment_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "10",
+    "priority": "10"
+  },
+  "eventEvoComplex": {
+    "display_name": "gar_eventevolutioncomplexity_displayname",
+    "type": "slider",
+    "max": "10",
+    "id": "11",
+    "priority": "11"
+  },
+  "garResult": {
+    "display_name": "gar_result_displayname",
+    "type": "string",
+    "id": "12",
+    "priority": "12"
+  }
+}

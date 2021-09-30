@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="nicsVersion"
+            type="String" />
+
+        <variable
+            name="adapter"
+            type="android.widget.ArrayAdapter" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.LoginViewModel" />
+
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.LoginFragment" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/nicsLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/nics_logo"
+            android:src="@drawable/nics_logo_small"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="20dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Login progress -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/loginStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nicsLogo"
+            app:visibleAnimate="@{viewModel.isLoading}">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="8dp"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                app:indicatorSize="75dp"
+                app:indicatorColor="@color/holo_blue" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/loginStatusMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/login_progress_signing_in"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Login form -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/loginForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15sp"
+            android:minHeight="375dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nicsLogo"
+            app:visibleAnimate="@{!viewModel.isLoading}">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/configHostLayout"
+                    style="@style/AppTheme.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:layout_marginStart="4dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/configHost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:layout_gravity="center_vertical"
+                        android:textIsSelectable="true"
+                        android:hint="@string/nics_server"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        selection="@={viewModel.selectedServer}"
+                        autoCompleteAdapter="@{adapter}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/IconOnlyWithOutlineButton"
+                    android:id="@+id/addHost"
+                    android:contentDescription="@string/add_server_host"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="5dp"
+                    app:iconGravity="textStart"
+                    android:layout_gravity="center_vertical"
+                    android:maxWidth="48dp"
+                    android:maxHeight="48dp"
+                    app:icon="@drawable/ic_baseline_add_24"
+                    app:iconTint="@color/holo_blue"
+                    android:gravity="center"
+                    android:onClick="@{() -> fragment.addServerHost()}"/>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/IconOnlyWithOutlineButton"
+                    android:id="@+id/removeHost"
+                    android:contentDescription="@string/remove_server_host"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:maxWidth="48dp"
+                    android:maxHeight="48dp"
+                    app:icon="@drawable/ic_baseline_remove_24"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/holo_blue"
+                    android:gravity="center"
+                    android:onClick="@{() -> fragment.removeServerHost()}"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/signInButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/action_sign_in_register"
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="4dp"
+                android:padding="20dp"
+                android:onClick="@{() -> fragment.attemptLogin()}"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/tablet_layout_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.isTabletLayout}"
+                android:text="@string/tablet_layout_checkbox_text"
+                visible="@{viewModel.largeScreen}"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/VersionNumberLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/hint"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#474747"
+                android:text="@{nicsVersion}" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.maps.MarkupPanelDefaultFragment" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupSymbolButton"
+            android:contentDescription="@string/markup_AddSymbolButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/symbol"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/markupLineButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupRectangleButton"
+            android:onClick="@{() -> fragment.newSymbol()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupLineButton"
+            android:contentDescription="@string/markup_AddLineButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/line"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/markupSymbolButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/markupPolygonButton"
+            android:onClick="@{() -> fragment.newLine()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupRectangleButton"
+            android:contentDescription="@string/markup_AddRectangleButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/rectangle"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/markupSymbolButton"
+            app:layout_constraintBottom_toTopOf="@+id/managementActionPoint"
+            app:layout_constraintEnd_toStartOf="@+id/markupPolygonButton"
+            android:onClick="@{() -> fragment.newRectangle()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupPolygonButton"
+            android:contentDescription="@string/markup_AddTrapezoidButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/trapezoid"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/markupRectangleButton"
+            app:layout_constraintTop_toBottomOf="@+id/markupLineButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupFreehandButton"
+            android:onClick="@{() -> fragment.newPolygon()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/managementActionPoint"
+            android:contentDescription="@string/markup_AddCircleButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/circle"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/markupRectangleButton"
+            app:layout_constraintEnd_toStartOf="@+id/markupFreehandButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupFirelineButton"
+            android:onClick="@{() -> fragment.newCircle()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupFreehandButton"
+            android:contentDescription="@string/markup_AddFreeHandPolygonButton"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/ic_brush_white_24dp"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/managementActionPoint"
+            app:layout_constraintTop_toBottomOf="@+id/markupPolygonButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupTextButton"
+            android:onClick="@{() -> fragment.newFreehandPolygon()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupFirelineButton"
+            android:contentDescription="@string/add_markup_fireline_button"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/fireline_white"
+            app:iconSize="48dp"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/managementActionPoint"
+            app:layout_constraintEnd_toStartOf="@+id/markupTextButton"
+            android:onClick="@{() -> fragment.newFireline()}"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/IconOnlyWithOutlineButton"
+            android:id="@+id/markupTextButton"
+            android:contentDescription="@string/add_markup_text_button"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:icon="@drawable/ic_text_white_24dp"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/markupFirelineButton"
+            app:layout_constraintTop_toBottomOf="@+id/markupFreehandButton"
+            android:onClick="@{() -> fragment.newText()}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

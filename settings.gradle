@@ -1,0 +1,2 @@
+include ':nics'
+rootProject.name = "nics_android"

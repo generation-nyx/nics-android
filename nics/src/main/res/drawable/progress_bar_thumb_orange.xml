@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/seekbar_thumb_orange_disabled_holo" android:state_enabled="false" />
+
+    <item android:drawable="@drawable/seekbar_thumb_orange_pressed_holo" android:state_pressed="true" />
+
+    <item android:drawable="@drawable/seekbar_thumb_orange_focused_holo" android:state_selected="true" />
+
+    <item android:drawable="@drawable/seekbar_thumb_orange_normal_holo" />
+</selector>

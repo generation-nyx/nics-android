@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="edu.mit.ll.nics.android.R" />
+        <import type="edu.mit.ll.nics.android.utils.Converter" />
+        <import type="edu.mit.ll.nics.android.utils.Utils" />
+        <import type="android.graphics.Typeface" />
+        <import type="edu.mit.ll.nics.android.enums.SendStatus" />
+
+        <variable
+            name="picasso"
+            type="com.squareup.picasso.Picasso" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.GeneralMessageListViewModel" />
+
+        <variable
+            name="report"
+            type="edu.mit.ll.nics.android.database.entities.GeneralMessage" />
+
+        <variable
+            name="callback"
+            type="edu.mit.ll.nics.android.interfaces.ReportClickCallback" />
+
+        <variable
+            name="retry"
+            type="edu.mit.ll.nics.android.interfaces.ClickCallback" />
+
+        <variable
+            name="preferences"
+            type="edu.mit.ll.nics.android.repository.PreferencesRepository"/>
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:checkable="true"
+        android:minHeight="148dp"
+        app:cardElevation="0dp"
+        strokeWidth="@{viewModel.selectedReport.id == report.id ? @dimen/thick_border : @dimen/thin_border}"
+        app:strokeColor="@color/holo_blue_light"
+        app:checkedIconSize="40dp"
+        app:checkedIconTint="@color/holo_blue"
+        checkedValue="@{viewModel.selectedReport.id == report.id}"
+        android:onClick="@{() -> callback.onClick(report)}"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/sendProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:indicatorColor="@color/holo_blue"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/material_outlined_button_stroke_color_red"
+                android:gravity="center"
+                android:id="@+id/failedToSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:padding="10dp"
+                app:iconGravity="textEnd"
+                app:autoSizeMaxTextSize="100sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                android:text="@string/retry"
+                android:textColor="@color/red500"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                app:icon="@drawable/error_outline"
+                app:iconTint="@color/red500"
+                app:rippleColor="@color/holo_blue_light"
+                android:contentDescription="@string/retry"
+                android:onClick="@{() -> retry.onClick()}"
+                visible="@{report.failedToSend &amp;&amp; report.sendStatus.equals(SendStatus.WAITING_TO_SEND)}"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:paddingBottom="8dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/generalMessageBlueDotImage"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/blue_dot"
+                    android:contentDescription="@string/notification"
+                    visible="@{!report.user.equalsIgnoreCase(preferences.getUserName()) &amp;&amp; !report.hasRead() &amp;&amp; !report.draft}"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/generalMessageThumbnail"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:maxWidth="48dp"
+                    android:maxHeight="48dp"
+                    android:padding="2dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"
+                    android:contentDescription="@string/icon"/>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/isDraft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/draft"
+                        typeface="@{Typeface.ITALIC}"
+                        visible="@{report.draft}"
+                        app:autoSizeMaxTextSize="100sp"
+                        app:autoSizeMinTextSize="14sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/generalMessageTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{`User: ` + report.message.user}"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        app:autoSizeMaxTextSize="100sp"
+                        app:autoSizeMinTextSize="14sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/generalMessageDescription"
+                        visible="@{report.message.description != null &amp;&amp; !report.message.description.empty}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:text="@{`Description: ` + report.message.description}"
+                        app:autoSizeMaxTextSize="100sp"
+                        app:autoSizeMinTextSize="14sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/generalMessageLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{`Coordinates: ` + Double.toString(report.message.latitude) + `, ` + Double.toString(report.message.longitude)}"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        app:autoSizeMaxTextSize="100sp"
+                        app:autoSizeMinTextSize="14sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/generalMessageTimestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:text="@{`Timestamp: ` + Converter.timestampToDateFull(generalMessageTimestamp, report.seqTime, report.seqTime)}"
+                        app:autoSizeMaxTextSize="100sp"
+                        app:autoSizeMinTextSize="14sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/messageImage"
+                    visible="@{!Utils.emptyCheck(report.fullPath)}"
+                    picasso="@{picasso}"
+                    url="@{report.fullPath}"
+                    loading="@{loading}"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:contentDescription="@string/message_image"
+                    android:scaleType="centerCrop"
+                    app:backgroundTint="@color/material_on_surface_emphasis_medium"
+                    app:backgroundTintMode="add" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:indeterminate="true"
+                    android:layout_gravity="center"
+                    app:indicatorColor="@color/holo_blue"
+                    android:visibility="gone" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/notSoDark</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">true</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorAccent">@color/holo_blue_dark</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+<!--        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>-->
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
+<!--        <item name="materialButtonStyle">@style/AlertDialog</item>-->
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="materialButtonOutlinedStyle">@style/MaterialButton.OutlinedButton</item>
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Widget.App.SnackbarTextView</item>
+        <item name="snackbarButtonStyle">@style/Widget.App.SnackbarButton</item>
+    </style>
+
+    <style name="MaterialButton.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="rippleColor">@color/holo_blue_light</item>
+        <item name="strokeColor">@color/material_outlined_button_stroke_color</item>
+    </style>
+
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
+        <item name="actionTextColorAlpha">1</item>
+    </style>
+
+    <style name="Widget.App.SnackbarTextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/holo_blue_light</item>
+    </style>
+
+    <style name="Widget.App.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">@color/holo_blue</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Snackbar" parent="">
+        <item name="colorPrimary">@color/notSoDark</item>
+        <item name="colorOnSurface">@color/notSoDark</item>
+    </style>
+
+    <style name="AppTheme.TextInputLayout.OutlinedBox.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="backgroundColor">@color/colorBackground</item>
+        <item name="boxStrokeColor">@color/material_outlined_button_stroke_color</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.ExposedDropdownMenu</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="hintTextColor">@color/holo_blue_light</item>
+    </style>
+
+    <style name="ThemeOverlay.App.ExposedDropdownMenu" parent="">
+        <item name="colorPrimary">@color/notSoDark</item>
+        <item name="colorOnSurface">@color/material_outlined_button_stroke_color</item>
+        <item name="colorError">@color/red</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.App.Caption</item>
+    </style>
+
+    <style name="Widget.App.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@drawable/custom_popup_background</item>
+        <item name="android:disabledAlpha">0.5</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextAppearance.App.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="MaterialButton.CircularButton.Icon" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="iconSize">24dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/holo_blue</item>
+        <item name="rippleColor">@color/white</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Button.Circle</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="AppTheme.FloatingActionButtonNormal" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/holo_blue</item>
+    </style>
+
+    <style name="AppTheme.LinearProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="trackColor">@color/holo_blue_light</item>
+        <item name="indicatorColor">@color/holo_blue</item>
+    </style>
+
+    <style name="AppTheme.FloatingActionButtonMini" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="backgroundColor">@color/colorBackground</item>
+        <item name="boxStrokeColor">@color/material_outlined_button_stroke_color</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="hintTextColor">@color/holo_blue_light</item>
+        <item name="android:theme">@style/TextInputLayoutAppearance</item>
+    </style>
+
+    <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlNormal">@color/holo_blue</item>
+        <item name="colorControlActivated">@color/holo_blue</item>
+        <item name="colorControlHighlight">@color/holo_blue_light</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAppearance">?android:attr/buttonBarButtonStyle</item>
+        <item name="android:textColor">@color/holo_blue</item>
+    </style>
+
+    <style name="WideDialog" parent="Base.Theme.MaterialComponents.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.15</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="FullscreenDialog" parent="Theme.AppCompat">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@color/colorBackground</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
+        <item name="android:listViewStyle">@style/AlertDialog.ListView</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AlertDialog.NegativeButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialog.PositiveButton</item>
+    </style>
+
+    <style name="AlertDialog.NegativeButton" parent="MaterialButton.OutlinedButton">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="AlertDialog.PositiveButton" parent="MaterialButton.OutlinedButton">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="AlertDialog.ListView" parent="@android:style/Widget.Holo.ListView">
+        <item name="android:itemBackground">@color/apptheme_color</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AlertDialog.Button" parent="@android:style/Widget.Holo.Light.Button">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SplashScreen" parent="Theme.AppCompat">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowAnimationStyle">@style/SplashScreenAnimation</item>
+    </style>
+
+    <style name="SplashScreenAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="AppTheme.ImageButtonStyle" parent="@android:style/Widget.ImageButton">
+        <item name="android:background">@drawable/apptheme_btn_default_holo_dark</item>
+    </style>
+
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownVerticalOffset">-200dp</item>
+    </style>
+
+    <style name="IconOnlyButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="IconOnlyWithOutlineButton" parent="MaterialButton.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

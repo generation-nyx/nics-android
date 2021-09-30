@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="edu.mit.ll.nics.android.maps.MapStyle" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.MapStylePickerViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constrainedHeight="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/mapType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleStandard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.STANDARD.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.STANDARD.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_standard"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_standard" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.STANDARD.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleSilver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.SILVER.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.SILVER.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_silver"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_silver" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.SILVER.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleRetro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.RETRO.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.RETRO.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_retro"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_retro" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.RETRO.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.DARK.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.DARK.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_dark"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_dark" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.DARK.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleNight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.NIGHT.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.NIGHT.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_night"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_night" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.NIGHT.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mapStyleAubergine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checkable="true"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/material_outlined_button_stroke_color"
+                        app:cardElevation="0dp"
+                        app:checkedIconSize="40dp"
+                        app:checkedIconTint="@color/holo_blue"
+                        checkedValue="@{viewModel.mapStyle.equals(MapStyle.AUBERGINE.getName())}"
+                        android:onClick="@{() -> viewModel.setMapStyle(MapStyle.AUBERGINE.getName())}"
+                        app:rippleColor="@color/white">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:srcCompat="@drawable/google_map_style_aubergine"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/google_map_style_aubergine" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{MapStyle.AUBERGINE.name}"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:background="@color/black"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </com.google.android.material.card.MaterialCardView>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

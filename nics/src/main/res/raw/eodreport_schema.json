@@ -1,0 +1,332 @@
+{
+  "meta": {
+    "type": "meta",
+    "name": "EOD Report"
+  },
+  "teamSection": {
+    "display_name": "eod_team_section_displayname",
+    "type": "section",
+    "id": "0",
+    "priority": "0",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "team",
+        "canton",
+        "town",
+        "location"
+      ]
+    }
+  },
+  "team": {
+    "display_name": "eod_team_displayname",
+    "type": "integer",
+    "id": "1",
+    "priority": "1",
+    "options": {
+      "0": "eod_categorytype_none",
+      "1": "eod_team_bihac_a",
+      "2": "eod_team_busovaca_a",
+      "3": "eod_team_livno_a",
+      "4": "eod_team_gorazde_a",
+      "5": "eod_team_mostar_a",
+      "6": "eod_team_sarajevo_a",
+      "7": "eod_team_tuzla_a",
+      "8": "eod_team_zepce_a",
+      "9": "eod_team_fucz"
+    }
+  },
+  "canton": {
+    "display_name": "eod_canton_displayname",
+    "type": "integer",
+    "id": "2",
+    "priority": "2",
+    "options": {
+      "0": "eod_canton_unsko_sanski",
+      "1": "eod_canton_posavski",
+      "2": "eod_canton_tuzlanski",
+      "3": "eod_canton_zenicko_dobojski",
+      "4": "eod_canton_bosansko_podrinjski",
+      "5": "eod_canton_srednjo_bosanski",
+      "6": "eod_canton_hercegovacko_neretvanski",
+      "7": "eod_canton_zapadno_hercegovacki",
+      "8": "eod_canton_sarajevo",
+      "9": "eod_canton_kanton_10"
+    }
+  },
+  "town": {
+    "display_name": "eod_town_displayname",
+    "type": "integer",
+    "id": "3",
+    "priority": "3",
+    "options": {
+      "0": "eod_town_bosanska_krupa",
+      "1": "eod_town_bosanski_petrovac",
+      "2": "eod_town_buzim",
+      "3": "eod_town_grad_bihac",
+      "4": "eod_town_grad_cazin",
+      "5": "eod_town_kljuc",
+      "6": "eod_town_sanski_most",
+      "7": "eod_town_velika_kladusa"
+    }
+  },
+  "location": {
+    "display_name": "eod_location_displayname",
+    "type": "coordinate",
+    "id": "4",
+    "priority": "4"
+  },
+  "taskSection": {
+    "display_name": "eod_task_section_displayname",
+    "type": "section",
+    "id": "5",
+    "priority": "5",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "taskType",
+        "macID",
+        "medevacPointTimeDistance",
+        "contactPerson",
+        "contactPhone",
+        "contactAddress",
+        "remarks",
+        "expendedResources",
+        "directlyInvolved"
+      ]
+    }
+  },
+  "taskType": {
+    "display_name": "eod_tasktype_displayname",
+    "type": "integer",
+    "id": "6",
+    "priority": "6",
+    "options": {
+      "0": "eod_tasktype_uxo_disposal",
+      "1": "eod_tasktype_emergency_uxo_response",
+      "2": "eod_tasktype_harvest_takeover",
+      "3": "eod_tasktype_mine_victim_rescue",
+      "4": "eod_tasktype_emergency_assistance",
+      "5": "eod_tasktype_blow_in_situ",
+      "6": "eod_tasktype_blow_on_range",
+      "7": "eod_tasktype_handovered",
+      "8": "eod_tasktype_other"
+    }
+  },
+  "macID": {
+    "display_name": "eod_macID_displayname",
+    "type": "integer",
+    "id": "7",
+    "priority": "7"
+  },
+  "medevacPointTimeDistance": {
+    "display_name": "eod_medevac_point_time_distance_displayname",
+    "type": "string",
+    "id": "8",
+    "priority": "8"
+  },
+  "contactPerson": {
+    "display_name": "eod_contact_person_displayname",
+    "type": "string",
+    "id": "9",
+    "priority": "9"
+  },
+  "contactPhone": {
+    "display_name": "eod_contact_phone_displayname",
+    "type": "integer",
+    "id": "10",
+    "priority": "10"
+  },
+  "contactAddress": {
+    "display_name": "eod_contact_address_displayname",
+    "type": "string",
+    "id": "11",
+    "priority": "11"
+  },
+  "remarks": {
+    "display_name": "eod_remarks_displayname",
+    "type": "string",
+    "id": "12",
+    "priority": "12"
+  },
+  "expendedResources": {
+    "display_name": "eod_expended_resources_displayname",
+    "type": "string",
+    "id": "13",
+    "priority": "13"
+  },
+  "directlyInvolved": {
+    "display_name": "eod_directly_involved_displayname",
+    "type": "string",
+    "id": "14",
+    "priority": "14"
+  },
+  "uxoSection": {
+    "display_name": "eod_uxo_reports_displayname",
+    "type": "section",
+    "id": "15",
+    "priority": "15",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "uxo"
+      ]
+    }
+  },
+  "uxo": {
+    "display_name": "eod_uxo_information_displayname",
+    "type": "uxo",
+    "id": "16",
+    "priority": "16"
+  },
+  "imageSection": {
+    "display_name": "eod_image_section_displayname",
+    "type": "section",
+    "id": "17",
+    "priority": "17",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "fullPath"
+      ]
+    }
+  },
+  "fullPath": {
+    "display_name": "",
+    "type": "image_selector",
+    "id": "18",
+    "priority": "18",
+    "default": "0"
+  },
+  "regions": [
+    {
+      "region": "Unsko-sanski",
+      "towns": [
+        "Bosanska Krupa",
+        "Bosanski Petrovac",
+        "Bužim",
+        "Grad Bihac",
+        "Grad Cazin",
+        "Ključ",
+        "Sanski Most",
+        "Velika Kladuša"
+      ]
+    },
+    {
+      "region": "Posavski",
+      "towns": [
+        "Domaljevac-Šamac",
+        "Odžak",
+        "Orašje"
+      ]
+    },
+    {
+      "region": "Tuzlanski",
+      "towns": [
+        "Banovići",
+        "Čelić",
+        "Doboj-Istok",
+        "Gračanica",
+        "Grad Tuzla",
+        "Gradačac",
+        "Kalesija",
+        "Kladanj",
+        "Lukavac",
+        "Sapna",
+        "Srebrenik",
+        "Teočak",
+        "Živinice"
+      ]
+    },
+    {
+      "region": "Zeničko-dobojski",
+      "towns": [
+        "Breza",
+        "Doboj-Jug",
+        "Grad Zenica",
+        "Kakanj",
+        "Maglaj",
+        "Olovo",
+        "Tešanj",
+        "Usora",
+        "Vareš",
+        "Visoko",
+        "Zavidovići",
+        "Žepče"
+      ]
+    },
+    {
+      "region": "Bosansko-podrinjski",
+      "towns": [
+        "Foča FBiH",
+        "Grad Goražde",
+        "Pale FBiH"
+      ]
+    },
+    {
+      "region": "Srednjo-bosanski",
+      "towns": [
+        "Bugojno",
+        "Busovača",
+        "Dobretići",
+        "Donji Vakuf",
+        "Fojnica",
+        "Gornji Vakuf-Uskoplje",
+        "Jajce",
+        "Kiseljak",
+        "Kreševo",
+        "Novi Travnik",
+        "Travnik",
+        "Vitez"
+      ]
+    },
+    {
+      "region": "Hercegovačko-neretvanski",
+      "towns": [
+        "Čapljina",
+        "Čitluk",
+        "Grad Mostar",
+        "Jablanica",
+        "Konjic",
+        "Neum",
+        "Prozor",
+        "Ravno",
+        "Stolac"
+      ]
+    },
+    {
+      "region": "Zapadno-hercegovački",
+      "towns": [
+        "Grad Široki Brijeg",
+        "Grude",
+        "Ljubuški",
+        "Posušje"
+      ]
+    },
+    {
+      "region": "Sarajevo",
+      "towns": [
+        "Centar Sarajevo",
+        "Hadžići",
+        "Ilidža",
+        "Ilijaš",
+        "Novi Grad Sarajevo",
+        "Novo Sarajevo",
+        "Stari Grad Sarajevo",
+        "Trnovo",
+        "Vogošća"
+      ]
+    },
+    {
+      "region": "Kanton 10",
+      "towns": [
+        "Bosansko Grahovo",
+        "Drvar",
+        "Glamoč",
+        "Grad Livno",
+        "Kupres",
+        "Tomislavgrad"
+      ]
+    }
+  ]
+}

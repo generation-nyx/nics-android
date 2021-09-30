@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditFreeHandPolylineFragment" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.maps.MarkupEditFreeHandPolygonViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@+id/markupButtons">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/customizationButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/strokeWidthSlider"
+                    android:baselineAligned="false">
+
+                    <com.google.android.material.button.MaterialButton
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/coordinateColorPickerButton"
+                        android:padding="2dp"
+                        android:layout_margin="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/color_picker_title"
+                        android:minHeight="80dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:textSize="16sp"
+                        android:layout_weight="2"
+                        backgroundColor="@{viewModel.color}"
+                        android:onClick="@{() -> fragment.showColorPicker()}"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/clearPointsButton"
+                        style="@style/IconOnlyWithOutlineButton"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="4dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/clear_points"
+                        app:icon="@drawable/clear_all"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/white"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> fragment.clear()}" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/markupDrawButton"
+                        style="@style/IconOnlyWithOutlineButton"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="4dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/my_location_button"
+                        app:icon="@drawable/ic_brush_white_24dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/white"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> viewModel.toggleDrawingMode()}"
+                        android:backgroundTint="@{viewModel.drawingMode? @color/notSoDark : @color/gray}"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/markupMeasurementToggleButton"
+                        style="@style/IconOnlyWithOutlineButton"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="4dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/measurement_tool"
+                        app:icon="@drawable/measurement"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/white"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> viewModel.toggleMeasurementTool()}"
+                        android:backgroundTint="@{viewModel.measuring? @color/notSoDark : @color/gray}"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/strokeWidthSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/customizationButtons"
+                    app:layout_constraintBottom_toTopOf="@+id/commentLayout"
+                    app:layout_constrainedHeight="true">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:padding="5dp"
+                        android:text="@string/markup_line_width"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/markupSizeSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:sliderValue="@={viewModel.strokeWidth}"
+                        android:stepSize="1.0"
+                        android:valueFrom="3.0"
+                        android:valueTo="15.0"
+                        app:thumbColor="@color/apptheme_color"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/commentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:baselineAligned="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/strokeWidthSlider"
+                    app:layout_constrainedHeight="true">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/comment"
+                        style="@style/AppTheme.TextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/comment"
+                        android:padding="5dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/white"
+                        app:endIconDrawable="@drawable/ic_clear_white_24"
+                        app:endIconCheckable="false"
+                        app:endIconContentDescription="Clear Comment">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textIsSelectable="true"
+                            android:inputType="textLongMessage"
+                            android:text="@={viewModel.comment}"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/markupButtons"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constrainedHeight="true">
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_margin="2dp"
+                android:padding="10dp"
+                android:onClick="@{() -> fragment.showExitDialog()}"
+                android:text="@string/markup_cancel"
+                app:icon="@drawable/ic_clear_white_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/red" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/zoomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_margin="2dp"
+                android:padding="10dp"
+                android:onClick="@{() -> fragment.zoom()}"
+                android:text="@string/zoom"
+                app:icon="@drawable/zoom_in"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/submitButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_margin="2dp"
+                android:padding="10dp"
+                android:onClick="@{() -> fragment.submit()}"
+                android:text="@string/markup_ok"
+                app:icon="@drawable/ic_baseline_check_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/terminalGreen" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="edu.mit.ll.nics.android.utils.Utils" />
+        <import type="edu.mit.ll.nics.android.utils.StringUtils" />
+
+        <variable
+            name="uxoTypeAdapter"
+            type="android.widget.ArrayAdapter" />
+
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.EODReportViewModel" />
+
+        <variable
+            name="uxo"
+            type="edu.mit.ll.nics.android.database.entities.Uxo"/>
+
+        <variable
+            name="callback"
+            type="edu.mit.ll.nics.android.interfaces.UxoClickCallback" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/incident_item_min_height"
+        android:orientation="horizontal"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/material_outlined_button_stroke_color_white"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/uxoTypeDropdown"
+                    style="@style/AppTheme.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/uxoType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:layout_gravity="center_vertical"
+                        android:textIsSelectable="true"
+                        android:hint="@string/uxo_type"
+                        android:padding="10dp"
+                        android:enabled="@{viewModel.draft}"
+                        android:focusable="@{viewModel.draft}"
+                        selection="@{Utils.itemExists(viewModel.uxos, position) ? viewModel.uxos.get(position).uxoType : StringUtils.EMPTY}"
+                        onItemSelected="@{(parent, v, pos, id) -> viewModel.setUxoType(v, position)}"
+                        autoCompleteAdapter="@{uxoTypeAdapter}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/uxoModel"
+                    style="@style/AppTheme.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/uxo_model"
+                    android:padding="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/uxoTypeDropdown">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/model"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:enabled="@{viewModel.draft}"
+                        android:inputType="textLongMessage"
+                        android:maxLines="1"
+                        text="@{Utils.itemExists(viewModel.uxos, position) ? viewModel.uxos.get(position).model : StringUtils.EMPTY}"
+                        onTextChanged="@{(text, start, before, count) -> viewModel.setUxoModel(text, position)}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/uxoCal"
+                    style="@style/AppTheme.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/uxo_cal"
+                    android:padding="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/uxoModel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:enabled="@{viewModel.draft}"
+                        android:inputType="textLongMessage"
+                        text="@{Utils.itemExists(viewModel.uxos, position) ? viewModel.uxos.get(position).cal : StringUtils.EMPTY}"
+                        onTextChanged="@{(text, start, before, count) -> viewModel.setUxoCal(text, position)}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/uxoQuantity"
+                    style="@style/AppTheme.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/uxo_quantity"
+                    android:padding="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/uxoCal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:enabled="@{viewModel.draft}"
+                        android:inputType="textLongMessage"
+                        text="@{Utils.itemExists(viewModel.uxos, position) ? viewModel.uxos.get(position).quantity : StringUtils.EMPTY}"
+                        onTextChanged="@{(text, start, before, count) -> viewModel.setUxoQuantity(text, position)}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteUxo"
+                    style="?attr/materialButtonOutlinedStyle"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/material_outlined_button_stroke_color_red"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                    android:padding="10dp"
+                    app:iconGravity="textEnd"
+                    app:autoSizeMaxTextSize="100sp"
+                    app:autoSizeMinTextSize="14sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform"
+                    android:text="@string/uxo_delete_uxo"
+                    android:textColor="@color/red500"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:icon="@drawable/delete"
+                    app:iconPadding="@dimen/padding_medium"
+                    app:iconTint="@color/red500"
+                    app:rippleColor="@color/holo_blue_light"
+                    android:contentDescription="@string/uxo_delete_uxo"
+                    android:onClick="@{() -> callback.onClick(uxo)}"
+                    visible="@{viewModel.draft}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/uxoQuantity" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

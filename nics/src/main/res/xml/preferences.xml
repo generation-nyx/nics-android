@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="header"
+        android:title="@string/pref_header_general"
+        app:iconSpaceReserved="false">
+
+<!--        <SwitchPreferenceCompat-->
+<!--            android:defaultValue="false"-->
+<!--            android:key="lrf_checkbox"-->
+<!--            android:summary="@string/pref_description_lrf"-->
+<!--            android:title="@string/pref_title_lrf"-->
+<!--            app:iconSpaceReserved="false" />-->
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="disable_notifications_checkbox"
+            android:title="@string/pref_title_disable_notifications"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="tracking_checkbox"
+            android:title="@string/pref_title_tracking"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="geofencing_checkbox"
+            android:title="@string/pref_title_geofencing"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="@string/language_code"
+            android:entries="@array/pref_language_list_titles"
+            android:entryValues="@array/pref_language_list_values"
+            android:key="language_select_list"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_description_language_select"
+            android:title="@string/pref_title_language_select"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="@string/metric"
+            android:entries="@array/pref_measurement_list_titles"
+            android:entryValues="@array/pref_measurement_list_values"
+            android:key="system_of_measurement_select_list"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_system_of_measurement_select"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_coordinate_list_titles"
+            android:entryValues="@array/pref_coordinate_list_values"
+            android:key="coordinate_representation"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_description_coordinate_display_format"
+            android:title="@string/pref_title_coordinate_display_format"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="header"
+        android:title="@string/pref_header_sync"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="tracking_sync_over_wifi_only_checkbox"
+            android:summary="@string/pref_description_sync_over_wifi_only"
+            android:title="@string/pref_title_sync_over_wifi_only"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="30"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="incident_sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_incident_sync_frequency"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="30"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="collabroom_sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_collabroom_sync_frequency"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="30"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="mdt_sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_description_mdt_sync_rate"
+            android:title="@string/pref_title_mdt_sync_frequency"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="30"
+            android:entries="@array/pref_layers_sync_frequency_titles"
+            android:entryValues="@array/pref_layers_sync_frequency_values"
+            android:key="wfs_sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_wfs_sync_frequency"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="clear_local_map_data"
+            android:title="@string/pref_title_clear_local_map_data"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="clear_local_chat_data"
+            android:title="@string/pref_title_clear_local_chat_data"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="clear_local_reports_data"
+            android:title="@string/pref_title_clear_local_reports_data"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

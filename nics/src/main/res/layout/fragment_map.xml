@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.MapViewModel" />
+
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.MapFragment" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/markupTopHalf"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            fullscreen="@{viewModel.mapHeightPercentage}"
+            app:layout_constraintBottom_toTopOf="@+id/markupBottomHalf"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/map_border_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/red"
+                android:visibility="invisible" />
+
+            <androidx.fragment.app.FragmentContainerView
+                xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/markupMapFragment"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                map:uiZoomControls="true"
+                map:uiRotateGestures="true"
+                map:uiScrollGestures="true"
+                map:uiZoomGestures="true"
+                map:uiTiltGestures="true"
+                map:uiMapToolbar="true"
+                map:uiCompass="true"
+                map:uiScrollGesturesDuringRotateOrZoom="true" />
+
+            <View
+                android:id="@+id/map_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/mapButtons"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="52dp"
+                android:gravity="end">
+
+                <!-- TODO Update these buttons to material buttons."-->
+                <ImageButton
+                    android:id="@+id/toggleHazardsButton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/map_button"
+                    android:contentDescription="@string/toggle_hazards"
+                    android:src="@drawable/alert_yellow"
+                    active="@{viewModel.showHazards}"
+                    android:onClick="@{() -> fragment.toggleShowHazards()}"/>
+
+                <ImageButton
+                    android:id="@+id/locationCopyButton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/map_button"
+                    android:contentDescription="@string/copy_selected_location_button"
+                    visible="@{viewModel.selectedMarker != null}"
+                    android:src="@drawable/ic_content_copy_black_24dp"
+                    android:onClick="@{() -> fragment.copyLocation()}"/>
+
+                <ImageButton
+                    android:id="@+id/markupIncidentButton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/map_button"
+                    android:contentDescription="@string/incident_focus_btn"
+                    android:src="@drawable/incident"
+                    android:onClick="@{() -> fragment.incidentFocus()}"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mapRecenterButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="160dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/rounded_recenter_button"
+                android:textAllCaps="false"
+                android:text="@string/re_center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/holo_blue"
+                android:layout_gravity="bottom"
+                app:iconGravity="textStart"
+                app:rippleColor="@color/holo_blue_light"
+                app:icon="@drawable/ic_navigation_white_24dp"
+                app:iconTint="@color/holo_blue"
+                android:onClick="@{v -> fragment.startCompassMode()}"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/markupBottomHalf"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/markupTopHalf">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/navigation_map_panel"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:defaultNavHost="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

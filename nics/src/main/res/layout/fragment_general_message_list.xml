@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="edu.mit.ll.nics.android.R" />
+
+        <variable
+            name="readOnly"
+            type="boolean" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.GeneralMessageListViewModel" />
+
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.reports.GeneralMessageListFragment" />
+
+        <variable
+            name="adapter"
+            type="edu.mit.ll.nics.android.ui.adapters.GeneralMessageAdapter" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackground"
+                android:layout_marginHorizontal="@dimen/item_horizontal_margin"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/generalMessageSearchBox"
+                    style="@style/AppTheme.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/searchHint"
+                    app:startIconDrawable="@drawable/ic_search_white_24dp"
+                    app:startIconTint="@color/white"
+                    app:startIconContentDescription="@string/searchChat"
+                    app:startIconCheckable="false"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/white"
+                    app:endIconDrawable="@drawable/ic_clear_white_24"
+                    app:endIconCheckable="false"
+                    app:endIconContentDescription="Clear Search"
+                    android:padding="2dp"
+                    visible="@{viewModel.searching}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textLongMessage"
+                        android:text="@={viewModel.search}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    style="@style/AppTheme.LinearProgressIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:indeterminate="true"
+                    visible="@{viewModel.loading}" />
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeRefresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/loadingGeneralMessages"
+                            visible="@{viewModel.loading &amp;&amp; adapter.itemCount == 0}"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:text="@string/loading_general_messages"
+                            android:textAlignment="center" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/noGeneralMessages"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@{readOnly ? @string/no_general_message_exist_readonly : @string/no_general_message_exist}"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            visible="@{!viewModel.loading &amp;&amp; adapter.itemCount == 0}" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/generalMessages"
+                                android:contentDescription="@string/general_message_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                app:adapter="@{adapter}"
+                                app:layoutManager="LinearLayoutManager"
+                                android:elevation="3dp"
+                                android:minHeight="100dp"
+                                visible="@{!(viewModel.loading &amp;&amp; adapter.itemCount == 0)}" />
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:orientation="vertical">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/deleteGeneralMessageFab"
+                    style="@style/AppTheme.FloatingActionButtonMini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/delete_general_message"
+                    app:srcCompat="@drawable/delete"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/notSoDark"
+                    android:onClick="@{() -> fragment.delete()}"
+                    animateFab="@{!readOnly &amp;&amp; viewModel.selectedReport != null &amp;&amp; viewModel.selectedReport.draft}"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/editGeneralMessageFab"
+                    style="@style/AppTheme.FloatingActionButtonMini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/edit_general_message"
+                    app:srcCompat="@drawable/edit"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/notSoDark"
+                    android:onClick="@{() -> fragment.edit()}"
+                    animateFab="@{!readOnly &amp;&amp; viewModel.selectedReport != null &amp;&amp; viewModel.selectedReport.draft}"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/openGeneralMessageInMapFab"
+                    style="@style/AppTheme.FloatingActionButtonMini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/open_report_in_map"
+                    app:srcCompat="@drawable/ic_map_white_24dp"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/notSoDark"
+                    android:onClick="@{() -> fragment.openReportInMap()}"
+                    animateFab="@{viewModel.selectedReport != null}"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/viewGeneralMessageFab"
+                    style="@style/AppTheme.FloatingActionButtonMini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/view_general_message"
+                    app:srcCompat="@drawable/ic_baseline_visibility_24"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/notSoDark"
+                    android:onClick="@{() -> fragment.view()}"
+                    animateFab="@{viewModel.selectedReport != null}"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addGeneralMessageFab"
+                    app:backgroundTint="@color/holo_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="18dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/add_general_message"
+                    app:srcCompat="@drawable/ic_baseline_add_24"
+                    app:fabSize="normal"
+                    app:rippleColor="@color/white"
+                    android:onClick="@{() -> fragment.add()}"
+                    visible="@{!readOnly}"
+                    rotateFab="@{viewModel.selectedReport != null}"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

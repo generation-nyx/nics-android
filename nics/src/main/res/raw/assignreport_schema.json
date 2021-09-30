@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "type": "meta",
+    "name": "Assignment Report"
+  },
+  "incident_info": {
+    "display_name": "assign_incident_info_section_displayname",
+    "type": "section",
+    "id": "1",
+    "priority": "1",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "reportType",
+        "incidentname",
+        "branch",
+        "divgroupstaging",
+        "starttime",
+        "enddate",
+        "coordinate"
+      ]
+    }
+  },
+  "reportType": {
+    "display_name": "assign_report_type_displayname",
+    "type": "string",
+    "id": "2",
+    "priority": "2"
+  },
+  "incidentname": {
+    "display_name": "assign_incident_name_displayname",
+    "type": "string",
+    "id": "3",
+    "priority": "3"
+  },
+  "branch": {
+    "display_name": "assign_branch_displayname",
+    "type": "string",
+    "id": "4",
+    "priority": "4"
+  },
+  "divgroupstaging": {
+    "display_name": "assign_div_group_staging_displayname",
+    "type": "string",
+    "id": "5",
+    "priority": "5"
+  },
+  "starttime": {
+    "display_name": "assign_start_time_displayname",
+    "type": "string",
+    "id": "6",
+    "priority": "6"
+  },
+  "enddate": {
+    "display_name": "assign_end_date_displayname",
+    "type": "string",
+    "id": "7",
+    "priority": "7"
+  },
+  "coordinate": {
+    "display_name": "assign_coordinate_displayname",
+    "type": "coordinate",
+    "id": "8",
+    "priority": "8"
+  },
+  "operations_personnel": {
+    "display_name": "assign_operations_personnel_section_displayname",
+    "type": "section",
+    "id": "9",
+    "priority": "9",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "opsChiefName",
+        "opsChiefAgency",
+        "opsChiefContact",
+        "depOpsChiefName",
+        "depOpsChiefAgency",
+        "depOpsChiefContact",
+        "branchName",
+        "branchAgency",
+        "branchContact",
+        "stamName",
+        "stamAgency",
+        "stamContact"
+      ]
+    }
+  },
+  "opsChiefName": {
+    "display_name": "assign_ops_chief_name_displayname",
+    "type": "string",
+    "id": "10",
+    "priority": "10"
+  },
+  "opsChiefAgency": {
+    "display_name": "assign_ops_chief_agency_displayname",
+    "type": "string",
+    "id": "11",
+    "priority": "11"
+  },
+  "opsChiefContact": {
+    "display_name": "assign_ops_chief_contact_displayname",
+    "type": "string",
+    "id": "12",
+    "priority": "12"
+  },
+  "depOpsChiefName": {
+    "display_name": "assign_dep_chief_name_displayname",
+    "type": "string",
+    "id": "13",
+    "priority": "13"
+  },
+  "depOpsChiefAgency": {
+    "display_name": "assign_dep_chief_agency_displayname",
+    "type": "string",
+    "id": "14",
+    "priority": "14"
+  },
+  "depOpsChiefContact": {
+    "display_name": "assign_dep_chief_contact_displayname",
+    "type": "string",
+    "id": "15",
+    "priority": "15"
+  },
+  "branchName": {
+    "display_name": "assign_branch_director_name_displayname",
+    "type": "string",
+    "id": "16",
+    "priority": "16"
+  },
+  "branchAgency": {
+    "display_name": "assign_branch_director_agency_displayname",
+    "type": "string",
+    "id": "17",
+    "priority": "17"
+  },
+  "branchContact": {
+    "display_name": "assign_branch_director_contact_displayname",
+    "type": "string",
+    "id": "18",
+    "priority": "18"
+  },
+  "stamName": {
+    "display_name": "assign_stam_name_displayname",
+    "type": "string",
+    "id": "19",
+    "priority": "19"
+  },
+  "stamAgency": {
+    "display_name": "assign_stame_agency_displayname",
+    "type": "string",
+    "id": "20",
+    "priority": "20"
+  },
+  "stamContact": {
+    "display_name": "assign_stam_contact_displayname",
+    "type": "string",
+    "id": "21",
+    "priority": "21"
+  },
+  "strike_team_task_force": {
+    "display_name": "assign_strike_team_task_force_section_displayname",
+    "type": "section",
+    "id": "22",
+    "priority": "22",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "resourceId1",
+        "leader1",
+        "contactInfo1",
+        "numPersons1",
+        "notes1",
+        "resourceId2",
+        "leader2",
+        "contactInfo2",
+        "numPersons2",
+        "notes2",
+        "resourceId3",
+        "leader3",
+        "contactInfo3",
+        "numPersons3",
+        "notes3",
+        "resourceId4",
+        "leader4",
+        "contactInfo4",
+        "numPersons4",
+        "notes4"
+      ]
+    }
+  },
+  "resourceId1": {
+    "display_name": "assign_resource_id1_displayname",
+    "type": "string",
+    "id": "23",
+    "priority": "23"
+  },
+  "leader1": {
+    "display_name": "assign_leader1_displayname",
+    "type": "string",
+    "id": "24",
+    "priority": "24"
+  },
+  "contactInfo1": {
+    "display_name": "assign_contactinfo1_displayname",
+    "type": "string",
+    "id": "25",
+    "priority": "25"
+  },
+  "numPersons1": {
+    "display_name": "assign_num_persons1_displayname",
+    "type": "string",
+    "id": "26",
+    "priority": "26"
+  },
+  "notes1": {
+    "display_name": "assign_notes1_displayname",
+    "type": "string",
+    "id": "27",
+    "priority": "27"
+  },
+  "resourceId2": {
+    "display_name": "assign_resource_id2_displayname",
+    "type": "string",
+    "id": "28",
+    "priority": "28"
+  },
+  "leader2": {
+    "display_name": "assign_leader2_displayname",
+    "type": "string",
+    "id": "29",
+    "priority": "29"
+  },
+  "contactInfo2": {
+    "display_name": "assign_contactinfo2_displayname",
+    "type": "string",
+    "id": "30",
+    "priority": "30"
+  },
+  "numPersons2": {
+    "display_name": "assign_num_persons2_displayname",
+    "type": "string",
+    "id": "31",
+    "priority": "31"
+  },
+  "notes2": {
+    "display_name": "assign_notes2_displayname",
+    "type": "string",
+    "id": "32",
+    "priority": "32"
+  },
+  "resourceId3": {
+    "display_name": "assign_resource_id3_displayname",
+    "type": "string",
+    "id": "33",
+    "priority": "33"
+  },
+  "leader3": {
+    "display_name": "assign_leader3_displayname",
+    "type": "string",
+    "id": "34",
+    "priority": "34"
+  },
+  "contactInfo3": {
+    "display_name": "assign_contactinfo3_displayname",
+    "type": "string",
+    "id": "35",
+    "priority": "35"
+  },
+  "numPersons3": {
+    "display_name": "assign_num_persons3_displayname",
+    "type": "string",
+    "id": "36",
+    "priority": "36"
+  },
+  "notes3": {
+    "display_name": "assign_notes3_displayname",
+    "type": "string",
+    "id": "37",
+    "priority": "37"
+  },
+  "resourceId4": {
+    "display_name": "assign_resource_id4_displayname",
+    "type": "string",
+    "id": "38",
+    "priority": "38"
+  },
+  "leader4": {
+    "display_name": "assign_leader4_displayname",
+    "type": "string",
+    "id": "39",
+    "priority": "39"
+  },
+  "contactInfo4": {
+    "display_name": "assign_contactinfo4_displayname",
+    "type": "string",
+    "id": "40",
+    "priority": "40"
+  },
+  "numPersons4": {
+    "display_name": "assign_num_persons4_displayname",
+    "type": "string",
+    "id": "41",
+    "priority": "41"
+  },
+  "notes4": {
+    "display_name": "assign_notes4_displayname",
+    "type": "string",
+    "id": "42",
+    "priority": "42"
+  },
+  "assignment": {
+    "display_name": "assign_assignment_section_displayname",
+    "type": "section",
+    "id": "43",
+    "priority": "43",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "workAssignments",
+        "specialInstructions"
+      ]
+    }
+  },
+  "workAssignments": {
+    "display_name": "assign_work_assignment_displayname",
+    "type": "string",
+    "id": "44",
+    "priority": "44"
+  },
+  "specialInstructions": {
+    "display_name": "assign_special_instructions_displayname",
+    "type": "string",
+    "id": "45",
+    "priority": "45"
+  },
+  "communications": {
+    "display_name": "assign_communications_section_displayname",
+    "type": "section",
+    "id": "46",
+    "priority": "46",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "commsAssignment1",
+        "commsChannel1",
+        "commsFreq1",
+        "commsPhone1",
+        "commsAssignment2",
+        "commsChannel2",
+        "commsFreq2",
+        "commsPhone2",
+        "commsAssignment3",
+        "commsChannel3",
+        "commsFreq3",
+        "commsPhone3",
+        "commsAssignment4",
+        "commsChannel4",
+        "commsFreq4",
+        "commsPhone4",
+        "commsAssignment5",
+        "commsChannel5",
+        "commsFreq5",
+        "commsPhone5",
+        "commsAssignment6",
+        "commsChannel6",
+        "commsFreq6",
+        "commsPhone6"
+      ]
+    }
+  },
+  "commsAssignment1": {
+    "display_name": "assign_comms_assignment1_displayname",
+    "type": "string",
+    "id": "47",
+    "priority": "47"
+  },
+  "commsChannel1": {
+    "display_name": "assign_comms_channel1_displayname",
+    "type": "string",
+    "id": "48",
+    "priority": "48"
+  },
+  "commsFreq1": {
+    "display_name": "assign_comms_freq1_displayname",
+    "type": "string",
+    "id": "49",
+    "priority": "49"
+  },
+  "commsPhone1": {
+    "display_name": "assign_comms_phone1_displayname",
+    "type": "string",
+    "id": "50",
+    "priority": "50"
+  },
+  "commsAssignment2": {
+    "display_name": "assign_comms_assignment2_displayname",
+    "type": "string",
+    "id": "51",
+    "priority": "51"
+  },
+  "commsChannel2": {
+    "display_name": "assign_comms_channel2_displayname",
+    "type": "string",
+    "id": "52",
+    "priority": "52"
+  },
+  "commsFreq2": {
+    "display_name": "assign_comms_freq2_displayname",
+    "type": "string",
+    "id": "53",
+    "priority": "53"
+  },
+  "commsPhone2": {
+    "display_name": "assign_comms_phone2_displayname",
+    "type": "string",
+    "id": "54",
+    "priority": "54"
+  },
+  "commsAssignment3": {
+    "display_name": "assign_comms_assignment3_displayname",
+    "type": "string",
+    "id": "55",
+    "priority": "55"
+  },
+  "commsChannel3": {
+    "display_name": "assign_comms_channel3_displayname",
+    "type": "string",
+    "id": "56",
+    "priority": "56"
+  },
+  "commsFreq3": {
+    "display_name": "assign_comms_freq3_displayname",
+    "type": "string",
+    "id": "57",
+    "priority": "57"
+  },
+  "commsPhone3": {
+    "display_name": "assign_comms_phone3_displayname",
+    "type": "string",
+    "id": "58",
+    "priority": "58"
+  },
+  "commsAssignment4": {
+    "display_name": "assign_comms_assignment4_displayname",
+    "type": "string",
+    "id": "59",
+    "priority": "59"
+  },
+  "commsChannel4": {
+    "display_name": "assign_comms_channel4_displayname",
+    "type": "string",
+    "id": "60",
+    "priority": "60"
+  },
+  "commsFreq4": {
+    "display_name": "assign_comms_freq4_displayname",
+    "type": "string",
+    "id": "61",
+    "priority": "61"
+  },
+  "commsPhone4": {
+    "display_name": "assign_comms_phone4_displayname",
+    "type": "string",
+    "id": "62",
+    "priority": "62"
+  },
+  "commsAssignment5": {
+    "display_name": "assign_comms_assignment5_displayname",
+    "type": "string",
+    "id": "63",
+    "priority": "63"
+  },
+  "commsChannel5": {
+    "display_name": "assign_comms_channel5_displayname",
+    "type": "string",
+    "id": "64",
+    "priority": "64"
+  },
+  "commsFreq5": {
+    "display_name": "assign_comms_freq5_displayname",
+    "type": "string",
+    "id": "65",
+    "priority": "65"
+  },
+  "commsPhone5": {
+    "display_name": "assign_comms_phone5_displayname",
+    "type": "string",
+    "id": "66",
+    "priority": "66"
+  },
+  "commsAssignment6": {
+    "display_name": "assign_comms_assignment6_displayname",
+    "type": "string",
+    "id": "67",
+    "priority": "67"
+  },
+  "commsChannel6": {
+    "display_name": "assign_comms_channel6_displayname",
+    "type": "string",
+    "id": "68",
+    "priority": "68"
+  },
+  "commsFreq6": {
+    "display_name": "assign_comms_freq6_displayname",
+    "type": "string",
+    "id": "69",
+    "priority": "69"
+  },
+  "commsPhone6": {
+    "display_name": "assign_comms_phone6_displayname",
+    "type": "string",
+    "id": "70",
+    "priority": "70"
+  },
+  "emergency_comms": {
+    "display_name": "assign_emergency_communications_section_displayname",
+    "type": "section",
+    "id": "71",
+    "priority": "71",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "commsMedical",
+        "commsEvac",
+        "commsOther"
+      ]
+    }
+  },
+  "commsMedical": {
+    "display_name": "assign_emergency_comms_medical_displayname",
+    "type": "string",
+    "id": "72",
+    "priority": "72"
+  },
+  "commsEvac": {
+    "display_name": "assign_emergency_comms_evac_displayname",
+    "type": "string",
+    "id": "73",
+    "priority": "73"
+  },
+  "commsOther": {
+    "display_name": "assign_emergency_comms_other_displayname",
+    "type": "string",
+    "id": "74",
+    "priority": "74"
+  },
+  "verify": {
+    "display_name": "assign_verify_section_displayname",
+    "type": "section",
+    "id": "75",
+    "priority": "75",
+    "default": "0",
+    "toggles": {
+      "1": [
+        "reportBy",
+        "prepdate",
+        "preptime",
+        "pscReviewBy",
+        "pscReviewdate",
+        "pscReviewtime",
+        "oscReviewBy",
+        "opscReviewdate",
+        "opscReviewtime"
+      ]
+    }
+  },
+  "reportBy": {
+    "display_name": "assign_report_by_displayname",
+    "type": "string",
+    "id": "76",
+    "priority": "76"
+  },
+  "prepdate": {
+    "display_name": "assign_prep_date_displayname",
+    "type": "string",
+    "id": "77",
+    "priority": "77"
+  },
+  "preptime": {
+    "display_name": "assign_prep_time_displayname",
+    "type": "string",
+    "id": "78",
+    "priority": "78"
+  },
+  "pscReviewBy": {
+    "display_name": "assign_psc_review_by_displayname",
+    "type": "string",
+    "id": "79",
+    "priority": "79"
+  },
+  "pscReviewdate": {
+    "display_name": "assign_psc_review_date_displayname",
+    "type": "string",
+    "id": "80",
+    "priority": "80"
+  },
+  "pscReviewtime": {
+    "display_name": "assign_psc_review_time_displayname",
+    "type": "string",
+    "id": "81",
+    "priority": "81"
+  },
+  "oscReviewBy": {
+    "display_name": "assign_osc_review_by_displayname",
+    "type": "string",
+    "id": "82",
+    "priority": "82"
+  },
+  "opscReviewdate": {
+    "display_name": "assign_osc_review_date_displayname",
+    "type": "string",
+    "id": "83",
+    "priority": "83"
+  },
+  "opscReviewtime": {
+    "display_name": "assign_osc_review_time_displayname",
+    "type": "string",
+    "id": "84",
+    "priority": "84"
+  }
+}

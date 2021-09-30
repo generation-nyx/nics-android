@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- TODO Fix up this xml file . -->
+    <data>
+        <import type="edu.mit.ll.nics.android.R" />
+        <import type="androidx.navigation.Navigation" />
+        <import type="edu.mit.ll.nics.android.utils.Utils" />
+
+        <variable
+            name="preferences"
+            type="edu.mit.ll.nics.android.repository.PreferencesRepository" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.OverviewViewModel" />
+
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.OverviewFragment" />
+
+        <variable
+            name="chatBadge"
+            type="com.google.android.material.badge.BadgeDrawable" />
+        <variable
+            name="eodBadge"
+            type="com.google.android.material.badge.BadgeDrawable" />
+        <variable
+            name="generalMessageBadge"
+            type="com.google.android.material.badge.BadgeDrawable" />
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/activity_vertical_margin"
+                android:paddingHorizontal="@dimen/activity_horizontal_margin">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight=".5"
+                    android:visibility="visible">
+
+                    <View
+                        android:id="@+id/incidentFrameLayoutBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rectangle_border" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <FrameLayout
+                            android:id="@+id/joinIncidentButtonLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginRight="30dp"
+                            android:background="@drawable/rectangle_border_fill"
+                            android:visibility="visible">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/joinIncidentButton"
+                                style="@android:style/Widget.Holo.Button.Small"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/notSoDark"
+                                android:drawableEnd="@drawable/down_arrow"
+                                android:elevation="24dp"
+                                android:text="@{Utils.isIncidentSelected(viewModel.activeIncident) ? context.getString(R.string.incident_active, viewModel.activeIncident.incidentName) : context.getString(R.string.incident_join)}"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="@color/apptheme_color"
+                                android:textStyle="bold"
+                                android:onClick="@{() -> fragment.showIncidentDialog()}"/>
+                        </FrameLayout>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/incidentFrameButtonLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/joinIncidentButtonLayout"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:alpha="@{Utils.isIncidentSelected(viewModel.activeIncident) ? 1.0f : 0.3f}"
+                            android:orientation="vertical">
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:background="@color/holo_blue_dark">
+
+                                <!-- TODO use Material Button instead. -->
+                                <ImageButton
+                                    android:id="@+id/mapButton"
+                                    style="@android:style/Widget.Holo.ImageButton"
+                                    android:layout_width="84dp"
+                                    android:layout_height="84dp"
+                                    android:contentDescription="@string/map"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/map_action_button"
+                                    android:clickable="@{Utils.isIncidentSelected(viewModel.activeIncident)}"
+                                    android:onClick="@{() -> fragment.openMapFragment()}" />
+                            </FrameLayout>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="110dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:text="@string/map"
+                                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".5"
+                    android:visibility="visible">
+
+                    <View
+                        android:id="@+id/roomFrameLayoutBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rectangle_border"
+                        android:alpha="@{Utils.isIncidentSelected(viewModel.activeIncident) ? 1.0f : 0.3f}"
+                        android:visibility="visible" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <FrameLayout
+                            android:id="@+id/joinRoomButtonLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:alpha="@{Utils.isIncidentSelected(viewModel.activeIncident) ? 1.0f : 0.3f}"
+                            android:background="@drawable/rectangle_border_fill">
+
+                            <Button
+                                android:id="@+id/joinRoomButton"
+                                style="@android:style/Widget.Holo.Button.Small"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/notSoDark"
+                                android:drawableEnd="@drawable/down_arrow"
+                                android:text="@{Utils.getRoomLabel(context, viewModel.activeCollabroom, preferences.getSelectedIncidentName())}"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="@color/holo_blue"
+                                android:textStyle="bold"
+                                android:clickable="@{Utils.isIncidentSelected(viewModel.activeIncident)}"
+                                android:onClick="@{() -> fragment.showRoomDialog()}" />
+
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:id="@+id/roomsLoadingProgressBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:indeterminate="true"
+                                android:layout_gravity="end"
+                                android:layout_marginEnd="4dp"
+                                app:indicatorColor="@color/holo_blue"
+                                android:visibility="gone"
+                                visible="@{viewModel.loadingCollabrooms}"/>
+                        </FrameLayout>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/roomFrameButtonLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/joinRoomButtonLayout"
+                            android:layout_centerHorizontal="true"
+                            android:visibility="visible">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/chatButtonLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="0dp"
+                                android:alpha="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) ? 1.0f : 0.3f}"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
+                                    android:background="@color/holo_blue_dark"
+                                    badge="@{chatBadge}"
+                                    badgeVisible="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) &amp;&amp; viewModel.unreadChats.size() > 0}"
+                                    badgeNumber="@{viewModel.unreadChats.size()}">
+
+                                    <ImageButton
+                                        android:id="@+id/chatButton"
+                                        style="@android:style/Widget.Holo.ImageButton"
+                                        android:layout_width="84dp"
+                                        android:layout_height="84dp"
+                                        android:contentDescription="@string/chat_log"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/chat_button"
+                                        android:clickable="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom)}"
+                                        android:onClick="@{() -> fragment.openChatFragment()}" />
+                                </FrameLayout>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="horizontal">
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="@string/chat_log"
+                                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/reportButtonLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                android:alpha="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) ? 1.0f : 0.3f}" >
+
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
+                                    android:background="@color/holo_blue_dark"
+                                    badge="@{eodBadge}"
+                                    badgeVisible="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) &amp;&amp; viewModel.unreadEODReports.size() > 0}"
+                                    badgeNumber="@{viewModel.unreadEODReports.size()}">
+
+                                    <ImageButton
+                                        android:id="@+id/reportsButton"
+                                        style="@android:style/Widget.Holo.ImageButton"
+                                        android:layout_width="84dp"
+                                        android:layout_height="84dp"
+                                        android:contentDescription="@string/EODREPORTS"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/damage_report_button"
+                                        android:clickable="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom)}"
+                                        android:onClick="@{() -> fragment.openEODReportFragment()}"/>
+                                </FrameLayout>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="horizontal">
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="@string/EODREPORTS"
+                                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/generalMessageButtonLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="0dp"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                android:alpha="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) ? 1.0f : 0.3f}">
+
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
+                                    android:background="@android:color/holo_blue_dark"
+                                    badge="@{generalMessageBadge}"
+                                    badgeVisible="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) &amp;&amp; viewModel.unreadGeneralMessages.size() > 0}"
+                                    badgeNumber="@{viewModel.unreadGeneralMessages.size()}">
+
+                                    <ImageButton
+                                        android:id="@+id/generalMessageButton"
+                                        style="@android:style/Widget.Holo.ImageButton"
+                                        android:layout_width="84dp"
+                                        android:layout_height="84dp"
+                                        android:contentDescription="@string/GENERALMESSAGE"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/general_message_button"
+                                        android:clickable="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom)}"
+                                        android:onClick="@{() -> fragment.openGeneralMessageFragment()}" />
+                                </FrameLayout>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="horizontal">
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="@string/GENERALMESSAGE"
+                                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/selectedOrg"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".04"
+                    android:text="@{Utils.getOrganizationLabel(context, viewModel.activeOrganization, preferences.userNickName)}"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

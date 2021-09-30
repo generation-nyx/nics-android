@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="edu.mit.ll.nics.android.R" />
+        <import type="edu.mit.ll.nics.android.maps.markup.FirelineType" />
+
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.maps.MarkupEditFirelineFragment" />
+
+        <variable
+            name="viewModel"
+            type="edu.mit.ll.nics.android.ui.viewmodel.maps.MarkupEditFirelineViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/primaryFireline"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/planned_fire_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/planned_fire_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.PRIMARY_FIRELINE) ? FirelineType.PRIMARY_FIRELINE.glowId : FirelineType.PRIMARY_FIRELINE.darkId}"
+            app:iconSize="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/markupLineButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupRectangleButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.PRIMARY_FIRELINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/markupLineButton"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/secondary_fire_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/secondary_fire_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.SECONDARY_FIRELINE) ? FirelineType.SECONDARY_FIRELINE.glowId : FirelineType.SECONDARY_FIRELINE.darkId}"
+            app:iconSize="40dp"
+            app:layout_constraintStart_toEndOf="@+id/primaryFireline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/markupPolygonButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.SECONDARY_FIRELINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/markupRectangleButton"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/proposed_dozer_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/proposed_dozer_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.PROPOSED_DOZER_LINE) ? FirelineType.PROPOSED_DOZER_LINE.glowId : FirelineType.PROPOSED_DOZER_LINE.darkId}"
+            app:iconSize="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/primaryFireline"
+            app:layout_constraintBottom_toTopOf="@+id/managementActionPoint"
+            app:layout_constraintEnd_toStartOf="@+id/markupPolygonButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.PROPOSED_DOZER_LINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/markupPolygonButton"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/completed_dozer_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/completed_dozer_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.COMPLETED_DOZER_LINE) ? FirelineType.COMPLETED_DOZER_LINE.glowId : FirelineType.COMPLETED_DOZER_LINE.darkId}"
+            app:iconSize="48dp"
+            app:layout_constraintStart_toEndOf="@+id/markupRectangleButton"
+            app:layout_constraintTop_toBottomOf="@+id/markupLineButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupFreehandButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.COMPLETED_DOZER_LINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/managementActionPoint"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/management_action_point"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/management_action_point"
+            icon="@{viewModel.firelineType.equals(FirelineType.MANAGEMENT_ACTION_POINT) ? FirelineType.MANAGEMENT_ACTION_POINT.glowId : FirelineType.MANAGEMENT_ACTION_POINT.darkId}"
+            app:iconSize="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/markupRectangleButton"
+            app:layout_constraintEnd_toStartOf="@+id/markupFreehandButton"
+            app:layout_constraintBottom_toTopOf="@+id/completedFireline"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.MANAGEMENT_ACTION_POINT)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/markupFreehandButton"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/uncontrolled_fire_edge_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/fire_edge_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.FIRE_EDGE_LINE) ? FirelineType.FIRE_EDGE_LINE.glowId : FirelineType.FIRE_EDGE_LINE.darkId}"
+            app:iconSize="44dp"
+            app:layout_constraintStart_toEndOf="@+id/managementActionPoint"
+            app:layout_constraintTop_toBottomOf="@+id/markupPolygonButton"
+            app:layout_constraintBottom_toTopOf="@+id/markupTextButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.FIRE_EDGE_LINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/completedFireline"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/completed_fire_line"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/completed_fire_line"
+            icon="@{viewModel.firelineType.equals(FirelineType.COMPLETED_FIRELINE) ? FirelineType.COMPLETED_FIRELINE.glowId : FirelineType.COMPLETED_FIRELINE.darkId}"
+            app:iconSize="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/managementActionPoint"
+            app:layout_constraintEnd_toStartOf="@+id/markupTextButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.COMPLETED_FIRELINE)}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/markupTextButton"
+            style="@style/IconOnlyWithOutlineButton"
+            android:contentDescription="@string/fire_spread_prediction"
+            android:backgroundTint="@color/notSoDarkLight"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            app:iconGravity="textStart"
+            android:maxWidth="48dp"
+            android:maxHeight="48dp"
+            app:iconTint="@null"
+            app:icon="@drawable/fire_spread_prediction"
+            icon="@{viewModel.firelineType.equals(FirelineType.FIRE_SPREAD_PREDICTION) ? FirelineType.FIRE_SPREAD_PREDICTION.glowId : FirelineType.FIRE_SPREAD_PREDICTION.darkId}"
+            app:iconSize="44dp"
+            app:layout_constraintStart_toEndOf="@+id/completedFireline"
+            app:layout_constraintTop_toBottomOf="@+id/markupFreehandButton"
+            android:onClick="@{() -> viewModel.setFirelineType(FirelineType.FIRE_SPREAD_PREDICTION)}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
