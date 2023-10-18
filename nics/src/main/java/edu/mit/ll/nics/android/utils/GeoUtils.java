@@ -667,7 +667,7 @@ public class GeoUtils {
 
                 for (GeoJsonFeature f : geoJsonFeatures) {
                     // Feature properties are private, so need to create a new hashmap of them.
-                    HashMap<String, Object> properties = new HashMap<>();
+                    HashMap<String, String> properties = new HashMap<>();
                     for (String key : f.getPropertyKeys()) {
                         properties.put(key, f.getProperty(key));
                     }
@@ -700,7 +700,7 @@ public class GeoUtils {
                             int count = 0;
                             for (GeoJsonPoint point : points) {
                                 coordinates = new ArrayList<>();
-                                coordinates.add(((GeoJsonPoint) f.getGeometry()).getCoordinates());
+                                coordinates.add(point.getCoordinates());
                                 layerFeatures.add(new LayerFeature(LayerFeature.hash(coordinates, properties) + "_" + count, coordinates, properties, "marker"));
                             }
                             break;
@@ -709,7 +709,7 @@ public class GeoUtils {
 
                             count = 0;
                             for (GeoJsonPolygon polygon : polygons) {
-                                coordinates = ((GeoJsonPolygon) f.getGeometry()).getOuterBoundaryCoordinates();
+                                coordinates = polygon.getOuterBoundaryCoordinates();
 
 //                                if (PolyUtil.isClosedPolygon(coordinates)) {
 //                                    coordinates = (ArrayList<LatLng>) PolyUtil.simplify(coordinates, PolyUtil.DEFAULT_TOLERANCE);
@@ -723,7 +723,7 @@ public class GeoUtils {
 
                             count = 0;
                             for (GeoJsonLineString line : lines) {
-                                coordinates = (ArrayList<LatLng>) ((GeoJsonLineString) f.getGeometry()).getCoordinates();
+                                coordinates = new ArrayList<>(line.getCoordinates());
                                 layerFeatures.add(new LayerFeature(LayerFeature.hash(coordinates, properties) + "_" + count, coordinates, properties, "sketch"));
                             }
                             break;

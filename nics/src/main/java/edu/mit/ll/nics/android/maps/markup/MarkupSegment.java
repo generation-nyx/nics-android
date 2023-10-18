@@ -89,6 +89,7 @@ public class MarkupSegment extends MarkupBaseShape {
         setPoints(feature.getCoordinates());
         setStrokeColor(colorToIntArray(feature.getStrokeColor()));
         setStrokeWidth(feature.getStrokeWidth() * 2);
+        setTag(new MarkupTag(feature));
     }
 
     public MarkupSegment(GoogleMap map,

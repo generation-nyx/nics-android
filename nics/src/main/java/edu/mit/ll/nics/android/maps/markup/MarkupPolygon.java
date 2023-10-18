@@ -100,6 +100,7 @@ public class MarkupPolygon extends MarkupBaseShape {
         setStrokeColor(colorToIntArray(feature.getStrokeColor()));
         setStrokeWidth(feature.getStrokeWidth() * 2);
         setFillColor(colorToIntArray(feature.getFillColor()));
+        setTag(new MarkupTag(feature));
     }
 
     public MarkupPolygon(GoogleMap map,
