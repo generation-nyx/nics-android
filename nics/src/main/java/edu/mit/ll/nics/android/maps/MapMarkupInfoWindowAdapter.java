@@ -151,7 +151,11 @@ public class MapMarkupInfoWindowAdapter extends View implements InfoWindowAdapte
                     value = formatter.format(entry.getValue().getAsDouble()) + " " + getResources().getString(R.string.markup_meters);
                 } else if (key.equals(getResources().getString(R.string.markup_course))) {
                     DecimalFormat formatter = new DecimalFormat("#.#######");
-                    value = formatter.format(entry.getValue().getAsDouble());
+                    try {
+                        value = formatter.format(entry.getValue().getAsDouble());
+                    } catch (NumberFormatException e) {
+                        value = entry.getValue().getAsString();
+                    }
                 } else if (key.equals(getResources().getString(R.string.markup_distance))) {
                     String systemOfMeasurement = mSettings.getSelectedSystemOfMeasurement();
                     String units;

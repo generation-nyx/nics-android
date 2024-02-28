@@ -313,7 +313,6 @@ public class TrackingLayer extends Layer {
                 attr.toString(),
                 feature.getCoordinate(),
                 symbolBitmap,
-                null,
                 false,
                 new int[] {255, 255, 255, 255});
 

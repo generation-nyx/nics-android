@@ -135,7 +135,6 @@ public class MarkupSymbol extends MarkupBaseShape {
                         String title,
                         LatLng coordinate,
                         Bitmap symbolBitmap,
-                        String symbolPath,
                         boolean isDraggable,
                         int[] strokeColor) {
         super(map, preferences, activity);
@@ -146,7 +145,6 @@ public class MarkupSymbol extends MarkupBaseShape {
         setFlat(true);
         setIcon(symbolBitmap);
         setDraggable(isDraggable);
-        setImagePathAndLoad(symbolPath);
         setFeatureId(String.valueOf(getTime()));
         setType(MarkupType.marker);
         setStrokeColor(strokeColor);
