@@ -238,7 +238,7 @@ public class TrackingLayersWorkers {
             for (Feature feature : features) {
                 String uniqueId = feature.getUniqueId();
 
-                if (uniqueId != null) {
+                if (uniqueId != null && feature.geometryToLatLng() != null) {
                     repository.addTrackingLayerFeatureToDatabase(new TrackingLayerFeature(feature, tracking.getLayerName()));
                 } else {
                     Timber.tag(DEBUG).i("Failed to parse MDT id from feature properties. Can't add to database.");
