@@ -41,7 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -79,7 +79,7 @@ public class LayerFeature {
     private String graphic;
     private String filename;
     private ArrayList<LatLng> coordinates;
-    private Map<String, Object> properties;
+    private Map<String, String> properties;
 
     @Ignore
     private Hazard hazard;
@@ -88,7 +88,7 @@ public class LayerFeature {
     }
 
     @Ignore
-    public LayerFeature(String layerFeatureId, ArrayList<LatLng> coordinates, Map<String, Object> properties, String type) {
+    public LayerFeature(String layerFeatureId, ArrayList<LatLng> coordinates, Map<String, String> properties, String type) {
         this.layerFeatureId = layerFeatureId;
         this.type = type;
         this.coordinates = coordinates;
@@ -128,11 +128,11 @@ public class LayerFeature {
         this.coordinates = coordinates;
     }
 
-    public Map<String, Object> getProperties() {
+    public Map<String, String> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<String, Object> properties) {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 
@@ -221,7 +221,7 @@ public class LayerFeature {
         setOpacity(MathUtils.clamp(MapUtils.getFloatValue(properties, "opacity", 0.4f), 0.6f, 1.0f));
         setRotation((float) Math.toDegrees(MapUtils.getDouble(properties, "rotation", 0d)));
         setFillColor(ColorUtils.parseRGBAColor(MapUtils.getString(properties, "fillcolor", "#FFFFFF"), getOpacity()));
-        setStrokeColor(ColorUtils.parseRGBAColor(MapUtils.getString(properties, "strokecolor", "#FFFFFF"), getOpacity()));
+        setStrokeColor(ColorUtils.parseRGBAColor(MapUtils.getString(properties, "strokecolor", "#808080"), getOpacity()));
         setStrokeWidth(MapUtils.getIntValue(properties, "strokewidth", 3));
         setLabelSize(MapUtils.getIntValue(properties, "labelsize", 30) + 12);
         setLabelText(MapUtils.getString(properties, "labeltext", ""));
@@ -277,7 +277,7 @@ public class LayerFeature {
                 rotation, labelSize, dashStyle, labelText, graphic, filename, coordinates, properties);
     }
 
-    public static String hash(ArrayList<LatLng> coordinates, HashMap<String, Object> properties) {
+    public static String hash(List<LatLng> coordinates, Map<String, String> properties) {
         return String.valueOf(Objects.hash(coordinates, properties));
     }
 }

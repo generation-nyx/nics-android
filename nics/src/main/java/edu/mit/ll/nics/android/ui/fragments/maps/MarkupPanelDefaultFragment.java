@@ -55,6 +55,7 @@ import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.mit.ll.nics.android.R;
@@ -69,6 +70,7 @@ import edu.mit.ll.nics.android.maps.markup.MarkupBaseShape;
 import edu.mit.ll.nics.android.maps.markup.MarkupFireLine;
 import edu.mit.ll.nics.android.maps.tags.FeatureTag;
 import edu.mit.ll.nics.android.maps.tags.HazardTag;
+import edu.mit.ll.nics.android.maps.tags.MarkupTag;
 import edu.mit.ll.nics.android.maps.tags.ReportTag;
 import edu.mit.ll.nics.android.ui.adapters.MarkupFeatureAdapter;
 import edu.mit.ll.nics.android.ui.fragments.MapFragmentDirections;
@@ -523,6 +525,13 @@ public class MarkupPanelDefaultFragment extends MapBaseFragment {
                 attr.addProperty("icon", R.drawable.alert_yellow);
                 attr.addProperty(getString(R.string.markup_message), hazard.getHazardLabel());
                 attr.addProperty(getString(R.string.markup_comment), hazard.getHazardType());
+                mMapFragment.setInfoMarker(createInfoMarker(midpoint, attr));
+            } else if (polygon.getTag() instanceof MarkupTag) {
+                MarkupTag tag = (MarkupTag) polygon.getTag();
+                JsonObject attr = new JsonObject();
+                for (Map.Entry<String, String> entry : tag.getAttributes().entrySet()) {
+                    attr.addProperty(entry.getKey(), entry.getValue());
+                }
                 mMapFragment.setInfoMarker(createInfoMarker(midpoint, attr));
             }
         } catch (Exception e) {

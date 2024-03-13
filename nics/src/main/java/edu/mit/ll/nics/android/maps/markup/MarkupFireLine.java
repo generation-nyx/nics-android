@@ -46,6 +46,7 @@ import edu.mit.ll.nics.android.database.entities.LayerFeature;
 import edu.mit.ll.nics.android.database.entities.MarkupFeature;
 import edu.mit.ll.nics.android.database.entities.OverlappingLayerFeature;
 import edu.mit.ll.nics.android.maps.tags.FeatureTag;
+import edu.mit.ll.nics.android.maps.tags.MarkupTag;
 import edu.mit.ll.nics.android.maps.tileproviders.FirelineTileProvider;
 import edu.mit.ll.nics.android.repository.PreferencesRepository;
 import edu.mit.ll.nics.android.utils.TouchUtils;
@@ -83,6 +84,7 @@ public class MarkupFireLine extends MarkupBaseShape {
         setStrokeColor(colorToIntArray(feature.getStrokeColor()));
         setStrokeWidth(feature.getStrokeWidth());
         setPoints(feature.getCoordinates());
+        setTag(new MarkupTag(feature));
     }
 
     public MarkupFireLine(GoogleMap map,

@@ -32,16 +32,23 @@ package edu.mit.ll.nics.android.maps.tags;
 import java.util.HashMap;
 import java.util.UUID;
 
+import edu.mit.ll.nics.android.database.entities.LayerFeature;
+
 public class MarkupTag {
 
     protected final UUID uuid;
-    protected final HashMap<Object, Object> attributes = new HashMap<>();
+    protected final HashMap<String, String> attributes = new HashMap<>();
 
     public MarkupTag() {
         uuid = UUID.randomUUID();
     }
 
-    public void addAttribute(Object key, Object value) {
+    public MarkupTag(LayerFeature feature) {
+        this();
+        getAttributes().putAll(feature.getProperties());
+    }
+
+    public void addAttribute(String key, String value) {
         attributes.put(key, value);
     }
 
@@ -49,7 +56,7 @@ public class MarkupTag {
         return uuid;
     }
 
-    public HashMap<Object, Object> getAttributes() {
+    public HashMap<String, String> getAttributes() {
         return attributes;
     }
 }

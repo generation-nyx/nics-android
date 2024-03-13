@@ -112,6 +112,7 @@ public class MarkupSymbol extends MarkupBaseShape {
         setRotation(feature.getRotation());
         setDraggable(true);
         setPoint(feature.getCoordinates().get(0));
+        setTag(new MarkupTag(feature));
     }
 
     public MarkupSymbol(GoogleMap map,

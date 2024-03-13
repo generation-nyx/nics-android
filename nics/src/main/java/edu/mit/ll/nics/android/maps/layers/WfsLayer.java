@@ -50,7 +50,6 @@ import edu.mit.ll.nics.android.maps.markup.MarkupType;
 import edu.mit.ll.nics.android.repository.PreferencesRepository;
 import timber.log.Timber;
 
-import static edu.mit.ll.nics.android.utils.BitmapUtils.generateBitmap;
 import static edu.mit.ll.nics.android.utils.BitmapUtils.generateText;
 import static edu.mit.ll.nics.android.utils.constants.NICS.DEBUG;
 
