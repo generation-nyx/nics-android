@@ -32,6 +32,7 @@
 
     <data>
         <import type="edu.mit.ll.nics.android.utils.Converter" />
+        <import type="android.view.View" />
 
         <variable
             name="chat"
@@ -94,5 +95,18 @@
             android:text="@{Converter.timestampToDateMedium(chatTimeStamp, chat.created, chat.created)}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/overflowMenu"
+            android:layout_width="42dp"
+            android:layout_height="75dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:elevation="4dp"
+            android:src="@drawable/baseline_more_vert_24"
+            android:visibility="@{chat.userOrganization.user.userName.equalsIgnoreCase(preferences.getUserName()) ? View.VISIBLE : View.GONE}" />
+
     </RelativeLayout>
 </layout>

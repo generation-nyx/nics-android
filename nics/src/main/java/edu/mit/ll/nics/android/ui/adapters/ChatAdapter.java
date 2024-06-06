@@ -30,7 +30,9 @@
 package edu.mit.ll.nics.android.ui.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -108,6 +110,23 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
         public ChatViewHolder(ChatItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            binding.overflowMenu.setOnClickListener(v -> {
+
+                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                popupMenu.getMenuInflater().inflate(R.menu.chat_item_menu, popupMenu.getMenu());
+                /*
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.delete_chat) {
+                        // Handle delete action
+                        // You can implement a callback to the ViewModel or Adapter to delete the chat message
+                        return true;
+                    }
+                    return false;
+                });
+                */
+
+                popupMenu.show();
+            });
         }
 
         void bind(Chat chat) {
