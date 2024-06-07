@@ -54,6 +54,8 @@ import kotlinx.coroutines.CoroutineScope;
 
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
 
+import android.util.Log;
+
 @HiltViewModel
 public class ChatViewModel extends ViewModel {
 
@@ -68,6 +70,7 @@ public class ChatViewModel extends ViewModel {
     private final NonNullMutableLiveData<String> mSearch = new NonNullMutableLiveData<>(EMPTY);
     private final NonNullMutableLiveData<String> mChatMessage = new NonNullMutableLiveData<>(EMPTY);
     private final MediatorLiveData<PagingData<Chat>> mChat = new MediatorLiveData<>();
+    private final MutableLiveData<Boolean> isDeleteButtonVisible = new MutableLiveData<>(false);
 
     @Inject
     public ChatViewModel(@PagedListConfig PagingConfig pagingConfig,
@@ -145,4 +148,17 @@ public class ChatViewModel extends ViewModel {
     public void setEndDate(long startDate) {
         mEndDate.postValue(startDate);
     }
+
+    public void deleteChat(Chat chat) {
+        Log.d("ChatViewModel", "Deleting chat:" + chat);
+    }
+    public LiveData<Boolean> getDeleteButtonVisibility() {
+        return isDeleteButtonVisible;
+    }
+
+    public void toggleDeleteButtonVisibility() {
+        boolean currentVisibility = isDeleteButtonVisible.getValue() != null && isDeleteButtonVisible.getValue();
+        isDeleteButtonVisible.setValue(!currentVisibility);
+    }
+
 }
