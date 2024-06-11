@@ -73,7 +73,7 @@
             highlight="@{viewModel.search}"
             searching="@{true}"
             outgoing="@{true}"
-            android:text="@{chat.message}" />
+            android:text="@{chat.message}"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/chatUserName"
@@ -96,25 +96,32 @@
             android:text="@{Converter.timestampToDateMedium(chatTimeStamp, chat.created, chat.created)}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textSize="12sp" />
-        <Button
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@id/message"
+            android:layout_alignEnd="@id/message"
+            android:layout_below="@id/message"
             android:text="@string/Delete"
-            app:visible="@{viewModel.deleteButtonVisibility}"/>
-
-        <ImageButton
-            android:id="@+id/overflowMenu"
-            android:layout_width="42dp"
-            android:layout_height="75dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:textColor="@color/md_red_800"
             android:elevation="4dp"
+            app:visible="@{viewModel.deleteButtonVisibility}" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/optionsMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/message"
+            android:layout_alignTop="@id/message"
+            android:backgroundTint="#D3D3D3"
+            android:elevation="4dp"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:onClick="@{() -> viewModel.toggleDeleteButtonVisibility(chat.userOrganization.user.userName)}"
             android:src="@drawable/baseline_more_vert_24"
-            android:visibility="@{chat.userOrganization.user.userName.equalsIgnoreCase(preferences.getUserName()) ? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> viewModel.toggleDeleteButtonVisibility()}" />
+            android:visibility="@{chat.userOrganization.user.userName.equalsIgnoreCase(preferences.getUserName()) ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 </layout>

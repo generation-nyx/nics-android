@@ -30,9 +30,7 @@
 package edu.mit.ll.nics.android.ui.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,16 +110,21 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
             super(binding.getRoot());
             this.binding = binding;
             this.viewModel = viewModel;
-            binding.overflowMenu.setOnClickListener(v -> {
-                viewModel.toggleDeleteButtonVisibility();
+
+            //binding.optionsMenu.setOnClickListener(v -> {
+                //viewModel.toggleDeleteButtonVisibility();
+            //});
+            binding.message.setOnLongClickListener(v -> {
+                Chat chat = binding.getChat();
+                viewModel.toggleDeleteButtonVisibility(chat.getUserOrganization().getUser().getUserName());
+                return false;
             });
             binding.deleteButton.setOnClickListener(v -> {
                 Chat chat = binding.getChat();
                 if (chat != null) {
-                    viewModel.deleteChat(chat);
+                    viewModel.softDeleteChat(chat);
                 }
             });
-
         }
 
         void bind(Chat chat) {

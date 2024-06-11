@@ -35,6 +35,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -58,4 +59,11 @@ public interface ChatApiService {
     Call<ResponseBody> postChatPresence(@Path(value = "incidentId", encoded = true) long incidentId,
                                         @Path(value = "collabroomId", encoded = true) long collabroomId,
                                         @Body Presence presence);
+    @Headers({"Content-Type: application/json"})
+    @DELETE("chatmsgs/{collabroomId}/chat/{chatMsgId}/userorg/{requestingUserOrgId}/incident/{incidentId}/username/{chatUsername}")
+    Call<Void> deleteChat(@Path(value = "collabroomId", encoded = true) long collabroomId,
+                          @Path(value = "chatMsgId", encoded = true) long chatMsgId,
+                          @Path(value = "requestingUserOrgId", encoded = true) long userOrgId,
+                          @Path(value = "incidentId", encoded = true) long incidentId,
+                          @Path(value = "chatUsername", encoded = true) String username);
 }
