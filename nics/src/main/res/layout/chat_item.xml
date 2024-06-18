@@ -38,6 +38,9 @@
         <variable
             name="chat"
             type="edu.mit.ll.nics.android.database.entities.Chat" />
+        <variable
+            name="fragment"
+            type="edu.mit.ll.nics.android.ui.fragments.ChatFragment" />
 
         <variable
             name="viewModel"
@@ -101,27 +104,12 @@
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/message"
             android:layout_alignEnd="@id/message"
             android:layout_below="@id/message"
             android:text="@string/Delete"
             android:textColor="@color/md_red_800"
             android:elevation="4dp"
-            app:visible="@{viewModel.deleteButtonVisibility}" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/optionsMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/message"
-            android:layout_alignTop="@id/message"
-            android:backgroundTint="#D3D3D3"
-            android:elevation="4dp"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            android:onClick="@{() -> viewModel.toggleDeleteButtonVisibility(chat.userOrganization.user.userName)}"
-            android:src="@drawable/baseline_more_vert_24"
-            android:visibility="@{chat.userOrganization.user.userName.equalsIgnoreCase(preferences.getUserName()) ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{viewModel.getDeleteButtonVisibility(chat) ? View.VISIBLE : View.GONE}"/>
 
     </RelativeLayout>
 </layout>

@@ -31,6 +31,7 @@ package edu.mit.ll.nics.android.api;
 
 import edu.mit.ll.nics.android.data.Presence;
 import edu.mit.ll.nics.android.data.messages.ChatMessage;
+import edu.mit.ll.nics.android.data.messages.DeleteChatMessage;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -59,11 +60,11 @@ public interface ChatApiService {
     Call<ResponseBody> postChatPresence(@Path(value = "incidentId", encoded = true) long incidentId,
                                         @Path(value = "collabroomId", encoded = true) long collabroomId,
                                         @Body Presence presence);
-    @Headers({"Content-Type: application/json"})
+    @Headers({"Accept: application/json", "Content-Type: application/json"})
     @DELETE("chatmsgs/{collabroomId}/chat/{chatMsgId}/userorg/{requestingUserOrgId}/incident/{incidentId}/username/{chatUsername}")
-    Call<Void> deleteChat(@Path(value = "collabroomId", encoded = true) long collabroomId,
-                          @Path(value = "chatMsgId", encoded = true) long chatMsgId,
-                          @Path(value = "requestingUserOrgId", encoded = true) long userOrgId,
-                          @Path(value = "incidentId", encoded = true) long incidentId,
-                          @Path(value = "chatUsername", encoded = true) String username);
+    Call<DeleteChatMessage> deleteChat(@Path(value = "collabroomId", encoded = true) long collabroomId,
+                                       @Path(value = "chatMsgId", encoded = true) long chatMsgId,
+                                       @Path(value = "requestingUserOrgId", encoded = true) long userOrgId,
+                                       @Path(value = "incidentId", encoded = true) long incidentId,
+                                       @Path(value = "chatUsername", encoded = true) String username);
 }

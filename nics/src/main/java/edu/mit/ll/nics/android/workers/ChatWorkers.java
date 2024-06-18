@@ -50,6 +50,7 @@ import edu.mit.ll.nics.android.auth.AuthCallback;
 import edu.mit.ll.nics.android.data.Organization;
 import edu.mit.ll.nics.android.data.Presence;
 import edu.mit.ll.nics.android.data.messages.ChatMessage;
+import edu.mit.ll.nics.android.data.messages.DeleteChatMessage;
 import edu.mit.ll.nics.android.database.entities.Chat;
 import edu.mit.ll.nics.android.enums.PresenceStatus;
 import edu.mit.ll.nics.android.enums.SendStatus;
@@ -221,7 +222,57 @@ public class ChatWorkers {
             });
         }
     }
+    @HiltWorker
+    public static class Delete extends AppWorker {
 
+        private final PreferencesRepository mPreferences;
+        private final ChatApiService mApiService;
+
+        @AssistedInject
+        public Delete(@Assisted @NonNull Context context,
+                      @Assisted @NonNull WorkerParameters workerParams,
+                      PreferencesRepository preferences,
+                      ChatApiService apiService) {
+            super(context, workerParams);
+
+            mPreferences = preferences;
+            mApiService = apiService;
+        }
+
+        @NonNull
+        @Override
+        public ListenableFuture<Result> startWork() {
+            long collabroomId = getInputData().getLong("collabroomId", -1);
+            long chatMsgId = getInputData().getLong("chatMsgId", -1);
+            long userOrgId = getInputData().getLong("userOrgId", -1);
+            long incidentId = getInputData().getLong("incidentId", -1);
+            String username = getInputData().getString("username");
+
+            return CallbackToFutureAdapter.getFuture(completer -> {
+                Call<DeleteChatMessage> call = mApiService.deleteChat(collabroomId, chatMsgId, userOrgId, incidentId, username);
+                call.enqueue(new Callback<DeleteChatMessage>() {
+                    @Override
+                    public void onResponse(@NotNull Call<DeleteChatMessage> call, @NotNull Response<DeleteChatMessage> response) {
+                        if (response.isSuccessful() && response.body() != null && "OK".equals(response.body().getMessage())) {
+                            Timber.tag(DEBUG).i("Successfully deleted chat message.");
+                            completer.set(Result.success());
+                        } else {
+                            Timber.tag(DEBUG).e("Failed to delete chat message. Status Code: %s", response.code());
+                            completer.set(Result.failure());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<DeleteChatMessage> call, @NotNull Throwable t) {
+                        Timber.tag(DEBUG).e("Failed to delete chat message: %s", t.getMessage());
+                        completer.set(Result.failure());
+                    }
+                });
+
+                return Result.success();
+            });
+        }
+    }
     @HiltWorker
     public static class ChatPresence extends AppWorker {
 

@@ -38,8 +38,11 @@ import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -52,15 +55,14 @@ import edu.mit.ll.nics.android.di.Qualifiers.PagedListConfig;
 import edu.mit.ll.nics.android.repository.ChatRepository;
 import edu.mit.ll.nics.android.repository.PreferencesRepository;
 import edu.mit.ll.nics.android.utils.livedata.NonNullMutableLiveData;
+import edu.mit.ll.nics.android.workers.ChatWorkers;
 import kotlinx.coroutines.CoroutineScope;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
 
-import android.util.Log;
+import java.util.HashMap;
+import java.util.Map;
 
 @HiltViewModel
 public class ChatViewModel extends ViewModel {
@@ -76,9 +78,9 @@ public class ChatViewModel extends ViewModel {
     private final NonNullMutableLiveData<String> mSearch = new NonNullMutableLiveData<>(EMPTY);
     private final NonNullMutableLiveData<String> mChatMessage = new NonNullMutableLiveData<>(EMPTY);
     private final MediatorLiveData<PagingData<Chat>> mChat = new MediatorLiveData<>();
-    private final MutableLiveData<Boolean> isDeleteButtonVisible = new MutableLiveData<>(false);
-    private final ChatApiService mApiService;
     private final PreferencesRepository mPreferences;
+    private final Map<Long, Boolean> deleteButtonVisibilityMap = new HashMap<>();
+    private final MutableLiveData<Boolean> isDeleteButtonVisible = new MutableLiveData<>(false);
 
     @Inject
     public ChatViewModel(@PagedListConfig PagingConfig pagingConfig,
@@ -93,7 +95,6 @@ public class ChatViewModel extends ViewModel {
         mStartDate = new NonNullMutableLiveData<>(repository.getOldestChatTimestamp(collabroomId));
         mEndDate = new NonNullMutableLiveData<>(DateTime.now(DateTimeZone.UTC).getMillis());
         mPreferences = preferences;
-        mApiService = apiService;
 
 
         Pager<Integer, Chat> pager = new Pager<>(pagingConfig, () -> repository.getChats(incidentId, collabroomId));
@@ -163,38 +164,48 @@ public class ChatViewModel extends ViewModel {
         mEndDate.postValue(startDate);
     }
 
+    public boolean getDeleteButtonVisibility(Chat chat) {
+        return Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chat.getId(), false));
+    }
+
+    public void toggleDeleteButtonVisibility(Chat chat) {
+        if (chat != null) {
+            String currentUserName = mPreferences.getUserName();
+            if (chat.getUserOrganization().getUser().getUserName().equalsIgnoreCase(currentUserName)) {
+                Long chatId = chat.getId();
+                boolean currentVisibility = Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chatId, false));
+                deleteButtonVisibilityMap.put(chatId, !currentVisibility);
+            }
+        }
+    }
     public void softDeleteChat(Chat chat) {
-        toggleDeleteButtonVisibility(chat.getUserOrganization().getUser().getUserName());
+        Timber.tag("ChatWorkers").d("Starting ChatWorkers.Get startWork() method.");
         long collabroomId = chat.getCollabroomId();
         long chatMsgId = chat.getId();
         long userOrgId = mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId();
         long incidentId = mPreferences.getSelectedIncidentId();
         String username = mPreferences.getUserName();
-
-        mApiService.deleteChat(collabroomId, chatMsgId, userOrgId, incidentId, username).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Timber.d("Chat successfully soft deleted.");
-                } else {
-                    Timber.e("Failed to soft delete chat: %s", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                Timber.e("Error soft deleting chat: %s", t.getMessage());
-            }
-        });
-    }
-    public LiveData<Boolean> getDeleteButtonVisibility() {
-        return isDeleteButtonVisible;
-    }
-
-    public void toggleDeleteButtonVisibility(String messageOwner) {
-        if (mPreferences.getUserName().equalsIgnoreCase(messageOwner)) {
-            boolean currentVisibility = isDeleteButtonVisible.getValue() != null && isDeleteButtonVisible.getValue();
-            isDeleteButtonVisible.setValue(!currentVisibility);
-        }
+        Data inputData = new Data.Builder()
+                .putLong("collabroomId", collabroomId)
+                .putLong("chatMsgId", chatMsgId)
+                .putLong("userOrgId", userOrgId)
+                .putLong("incidentId", incidentId)
+                .putString("username", username)
+                .build();
+        OneTimeWorkRequest deleteWorkRequest = new OneTimeWorkRequest.Builder(ChatWorkers.Delete.class)
+                .setInputData(inputData)
+                .build();
+        WorkManager.getInstance().enqueue(deleteWorkRequest);
+        WorkManager.getInstance().getWorkInfoByIdLiveData(deleteWorkRequest.getId())
+                .observeForever(workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                            chat.setDeleted(true);
+                            Timber.d("Chat successfully soft deleted.");
+                        } else {
+                            Timber.e("Failed to soft delete chat.");
+                        }
+                    }
+                });
     }
 }
