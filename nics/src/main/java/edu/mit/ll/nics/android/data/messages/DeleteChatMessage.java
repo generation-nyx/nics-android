@@ -8,7 +8,6 @@ public class DeleteChatMessage {
     private List<Chat> chats;
     private int count;
 
-    // Getters and setters
     public String getMessage() {
         return message;
     }

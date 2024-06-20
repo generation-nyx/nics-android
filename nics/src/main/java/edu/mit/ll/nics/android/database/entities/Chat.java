@@ -55,7 +55,6 @@ public class Chat {
     private boolean hasRead;
     private long incidentId;
     private SendStatus sendStatus = SendStatus.WAITING_TO_SEND;
-    private boolean deleted;
 
     @Expose
     @SerializedName("created")
@@ -225,13 +224,5 @@ public class Chat {
 
     public String toJson() {
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

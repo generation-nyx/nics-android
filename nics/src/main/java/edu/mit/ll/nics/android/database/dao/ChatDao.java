@@ -49,6 +49,9 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("SELECT * FROM chatTable WHERE id=:id")
     Chat getChatById(long id);
 
+    @Query("DELETE FROM chatTable WHERE chatId = :chatId")
+    void deleteChatById(long chatId);
+
     @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId ORDER BY :orderBy")
     PagingSource<Integer, Chat> getChats(long collabroomId, String orderBy);
 

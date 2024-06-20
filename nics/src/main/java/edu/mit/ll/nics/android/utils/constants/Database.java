@@ -41,7 +41,7 @@ import edu.mit.ll.nics.android.database.AppDatabase;
  */
 public class Database {
 
-    public static final int DATABASE_VERSION = 73;
+    public static final int DATABASE_VERSION = 72;
     public static final String DATABASE_NAME = "nics.db";
     public static final String ALERT_TABLE = "alertTable";
     public static final String COLLABROOM_TABLE = "collabroomTable";

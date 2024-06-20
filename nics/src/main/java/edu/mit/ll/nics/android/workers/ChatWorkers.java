@@ -227,16 +227,19 @@ public class ChatWorkers {
 
         private final PreferencesRepository mPreferences;
         private final ChatApiService mApiService;
+        private final ChatRepository mRepository;
 
         @AssistedInject
         public Delete(@Assisted @NonNull Context context,
                       @Assisted @NonNull WorkerParameters workerParams,
                       PreferencesRepository preferences,
-                      ChatApiService apiService) {
+                      ChatApiService apiService,
+                      ChatRepository repository) {
             super(context, workerParams);
 
             mPreferences = preferences;
             mApiService = apiService;
+            mRepository = repository;
         }
 
         @NonNull
@@ -247,13 +250,13 @@ public class ChatWorkers {
             long userOrgId = getInputData().getLong("userOrgId", -1);
             long incidentId = getInputData().getLong("incidentId", -1);
             String username = getInputData().getString("username");
-
             return CallbackToFutureAdapter.getFuture(completer -> {
                 Call<DeleteChatMessage> call = mApiService.deleteChat(collabroomId, chatMsgId, userOrgId, incidentId, username);
                 call.enqueue(new Callback<DeleteChatMessage>() {
                     @Override
                     public void onResponse(@NotNull Call<DeleteChatMessage> call, @NotNull Response<DeleteChatMessage> response) {
                         if (response.isSuccessful() && response.body() != null && "OK".equals(response.body().getMessage())) {
+                            mRepository.deleteChatFromDatabase(chatMsgId);
                             Timber.tag(DEBUG).i("Successfully deleted chat message.");
                             completer.set(Result.success());
                         } else {

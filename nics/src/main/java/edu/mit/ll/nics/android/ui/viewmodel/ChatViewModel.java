@@ -40,7 +40,6 @@ import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import org.joda.time.DateTime;
@@ -49,7 +48,6 @@ import org.joda.time.DateTimeZone;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import edu.mit.ll.nics.android.api.ChatApiService;
 import edu.mit.ll.nics.android.database.entities.Chat;
 import edu.mit.ll.nics.android.di.Qualifiers.PagedListConfig;
 import edu.mit.ll.nics.android.repository.ChatRepository;
@@ -80,13 +78,11 @@ public class ChatViewModel extends ViewModel {
     private final MediatorLiveData<PagingData<Chat>> mChat = new MediatorLiveData<>();
     private final PreferencesRepository mPreferences;
     private final Map<Long, Boolean> deleteButtonVisibilityMap = new HashMap<>();
-    private final MutableLiveData<Boolean> isDeleteButtonVisible = new MutableLiveData<>(false);
 
     @Inject
     public ChatViewModel(@PagedListConfig PagingConfig pagingConfig,
                          PreferencesRepository preferences,
-                         ChatRepository repository,
-                         ChatApiService apiService) {
+                         ChatRepository repository) {
         long incidentId = preferences.getSelectedIncidentId();
         long collabroomId = preferences.getSelectedCollabroomId();
 
@@ -99,10 +95,7 @@ public class ChatViewModel extends ViewModel {
 
         Pager<Integer, Chat> pager = new Pager<>(pagingConfig, () -> repository.getChats(incidentId, collabroomId));
         mChat.addSource(PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope), mChat::postValue);
-
-
     }
-
     public LiveData<PagingData<Chat>> getChat() {
         return mChat;
     }
@@ -181,7 +174,7 @@ public class ChatViewModel extends ViewModel {
     public void softDeleteChat(Chat chat) {
         Timber.tag("ChatWorkers").d("Starting ChatWorkers.Get startWork() method.");
         long collabroomId = chat.getCollabroomId();
-        long chatMsgId = chat.getId();
+        long chatMsgId = chat.getChatId();
         long userOrgId = mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId();
         long incidentId = mPreferences.getSelectedIncidentId();
         String username = mPreferences.getUserName();
@@ -196,16 +189,6 @@ public class ChatViewModel extends ViewModel {
                 .setInputData(inputData)
                 .build();
         WorkManager.getInstance().enqueue(deleteWorkRequest);
-        WorkManager.getInstance().getWorkInfoByIdLiveData(deleteWorkRequest.getId())
-                .observeForever(workInfo -> {
-                    if (workInfo != null && workInfo.getState().isFinished()) {
-                        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                            chat.setDeleted(true);
-                            Timber.d("Chat successfully soft deleted.");
-                        } else {
-                            Timber.e("Failed to soft delete chat.");
-                        }
-                    }
-                });
+        WorkManager.getInstance().getWorkInfoByIdLiveData(deleteWorkRequest.getId());
     }
 }
