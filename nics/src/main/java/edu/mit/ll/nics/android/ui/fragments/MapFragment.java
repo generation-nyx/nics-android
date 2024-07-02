@@ -75,6 +75,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -98,6 +99,7 @@ import edu.mit.ll.nics.android.maps.LocationSegment;
 import edu.mit.ll.nics.android.maps.MapMarkupInfoWindowAdapter;
 import edu.mit.ll.nics.android.maps.MapStyle;
 import edu.mit.ll.nics.android.maps.MapType;
+import edu.mit.ll.nics.android.maps.tileproviders.CachingTileProvider;
 import edu.mit.ll.nics.android.repository.EODReportRepository;
 import edu.mit.ll.nics.android.repository.GeneralMessageRepository;
 import edu.mit.ll.nics.android.repository.TrackingLayerRepository;
@@ -403,6 +405,13 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
                 Timber.tag(DEBUG).e(e, "Failed to get map async. ");
             }
         }
+
+        mPreferences.isOnline().observe(getViewLifecycleOwner(), isOnline -> {
+            if (mMap != null) {
+                updateMapTiles(isOnline);
+                Timber.tag("NetworkStatus").d("Is online: %s", isOnline);
+            }
+        });
     }
 
     @Override
@@ -431,6 +440,24 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         initInfoWindowAdapter();
         initZoom();
         initDistancePoint();
+
+        Boolean isOnline = mPreferences.isOnline().getValue();
+        if (isOnline != null) {
+            updateMapTiles(isOnline);
+        }
+    }
+    private void updateMapTiles(boolean isOnline) {
+        if (isOnline) {
+            Timber.d("online mode");
+            // Online mode: Use default Google Maps tiles
+            // No additional setup required, Google Maps handles this by default
+        } else {
+            Timber.d("offline mode");
+            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            // Offline mode: Use cached tiles
+            CachingTileProvider tileProvider = new CachingTileProvider();
+            mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+        }
     }
 
     private void initDistancePoint() {
