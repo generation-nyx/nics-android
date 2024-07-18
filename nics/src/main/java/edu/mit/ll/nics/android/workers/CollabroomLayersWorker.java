@@ -44,6 +44,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -53,6 +54,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
@@ -82,6 +86,7 @@ import static edu.mit.ll.nics.android.utils.GeoUtils.convertCoordinatesToGeometr
 import static edu.mit.ll.nics.android.utils.GeoUtils.getPolygonForCircle;
 import static edu.mit.ll.nics.android.utils.GeoUtils.parseGeojson;
 import static edu.mit.ll.nics.android.utils.GeoUtils.parseGeojsonFile;
+import static edu.mit.ll.nics.android.utils.GeoUtils.parseKmlFile;
 import static edu.mit.ll.nics.android.utils.StringUtils.httpToHttps;
 import static edu.mit.ll.nics.android.utils.constants.NICS.DEBUG;
 import static edu.mit.ll.nics.android.utils.constants.NICS.NICS_ROOM_LAYERS_TEMP_FOLDER;
@@ -127,6 +132,7 @@ public class CollabroomLayersWorker extends AppWorker {
                     CollabroomLayerMessage message = response.body();
                     if (message != null && message.getLayers().size() > 0) {
                         parseCollabroomLayers(collabroomId, message.getLayers());
+                        Timber.tag("LayerResponse").d("API Response: %s", message.toJson());
                         Timber.tag(DEBUG).i("Successfully received Collabroom Layers: %s", message.getCount());
                     } else {
                         Timber.tag(DEBUG).w("Received empty Collabroom Layers. Status Code: %s", response.code());
@@ -230,7 +236,7 @@ public class CollabroomLayersWorker extends AppWorker {
                     dataLayer.setFeatures(features);
                     dataLayer.setCollabroomId(collabroomId);
                     mRepository.addCollabroomLayerToDatabase(dataLayer);
-
+                    Timber.tag(DEBUG).d("Collabroom Layer Database: %s", mRepository.getCollabroomLayers(collabroomId));
                     Timber.tag(DEBUG).i("Downloaded %s", dataLayer.getDisplayName());
                 } catch (AssertionError e) {
                     Timber.tag(DEBUG).e(e, "Failed to add collabroom layer.");
@@ -269,6 +275,10 @@ public class CollabroomLayersWorker extends AppWorker {
             case "wfs":
                 url = new WfsUrl.Builder(url, name).build().getUrl();
                 break;
+            case "kmz":
+                //url = url + "/" + name;
+                url = "https://demo.generationnyx.com/upload/kmz/117941399304552483400017590819012417618.kmz";
+                break;
             case "geojson":
             case "gpx":
             case "kml":
@@ -298,9 +308,107 @@ public class CollabroomLayersWorker extends AppWorker {
                 Timber.tag(DEBUG).e(e, "Failed to execute wfs/geojson download call.");
             }
         } else if (type.equals("kml")) {
-            
+        } else if (type.equals("kmz")) {
+           return downloadKmzFile(url, tempDirectory);
         }
 
         return null;
+    }
+
+
+    private ArrayList<LayerFeature> downloadKmzFile(String url, String tempDirectory) {
+        Call<ResponseBody> call = mDownloader.download(url);
+        try {
+            Response<ResponseBody> response = call.execute();
+            Timber.tag("KMZ Response").d("Response: %s", response.body());
+            if (response.body() != null) {
+                try (InputStream stream = response.body().byteStream()) {
+                    File downloadedFile = createTempFile(tempDirectory);
+                    Files.asByteSink(downloadedFile).writeFrom(stream);
+                    ArrayList<LayerFeature> features = extractKmlFile(downloadedFile);
+                    deleteFile(downloadedFile);
+                    return features;
+                } catch (IOException e) {
+                    Timber.tag("KML Download").e(e, "Failed to save and parse KML/KMZ response.");
+                }
+            }
+        } catch (IOException e) {
+            Timber.tag("KML Download").e(e, "Failed to execute KML/KMZ download call.");
+        }
+
+        return null;
+    }
+
+    private ArrayList<LayerFeature> extractKmlFile(File kmzFile) {
+        ArrayList<LayerFeature> features = new ArrayList<>();
+        File kmzTempDir = new File(mContext.getCacheDir(), "kmz_temp_dir");
+
+        try {
+            clearDirectory(kmzTempDir.getPath());
+            unzip(kmzFile, kmzTempDir);
+
+            File kmlFile = findKmlFile(kmzTempDir);
+            if (kmlFile != null) {
+                File nonKmlDir = cacheNonKmlFiles(kmzTempDir);
+                features = parseKmlFile(kmlFile, nonKmlDir);
+            }
+        } catch (IOException e) {
+            Timber.tag(DEBUG).e(e, "Failed to extract KMZ file.");
+        } finally {
+            clearDirectory(kmzTempDir.getPath());
+        }
+
+        return features;
+    }
+
+    private void unzip(File zipFile, File targetDirectory) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                File outputFile = new File(targetDirectory, entry.getName());
+                if (entry.isDirectory()) {
+                    outputFile.mkdirs();
+                } else {
+                    outputFile.getParentFile().mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, length);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private File findKmlFile(File directory) {
+        for (File file : directory.listFiles()) {
+            if (file.getName().endsWith(".kml")) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    private File cacheNonKmlFiles(File directory) {
+        File cacheDir = new File(mContext.getCacheDir(), "kmz_cache");
+        if (!cacheDir.exists()) {
+            cacheDir.mkdirs();
+        }
+
+        for (File file : directory.listFiles()) {
+            if (!file.getName().endsWith(".kml")) {
+                File cachedFile = new File(cacheDir, file.getName());
+                try {
+                    Files.copy(file, cachedFile);
+                    Timber.d("Cached non-KML file: %s", cachedFile.getAbsolutePath());
+                } catch (IOException e) {
+                    Timber.e(e, "Failed to cache non-KML file: %s", file.getName());
+                    return null;
+                }
+            }
+        }
+        return cacheDir;
     }
 }

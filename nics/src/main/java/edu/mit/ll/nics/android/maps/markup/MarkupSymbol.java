@@ -113,6 +113,10 @@ public class MarkupSymbol extends MarkupBaseShape {
         setDraggable(true);
         setPoint(feature.getCoordinates().get(0));
         setTag(new MarkupTag(feature));
+        if (feature.getGraphic() != null && !feature.getGraphic().isEmpty()) {
+            loadImage(feature.getGraphic());
+        }
+
     }
 
     public MarkupSymbol(GoogleMap map,
@@ -205,6 +209,27 @@ public class MarkupSymbol extends MarkupBaseShape {
         setTag(new FeatureTag(feature));
 
     }
+
+    private void loadImage(String graphic) {
+        int desiredWidth = 100;
+        int desiredHeight = 100;
+
+        Glide.with(mActivity)
+                .asBitmap()
+                .load(graphic)
+                .override(desiredWidth, desiredHeight)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        setIcon(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
 
 
     private void loadBitmap(String url) {

@@ -59,15 +59,21 @@ import org.locationtech.proj4j.CoordinateTransform;
 import org.locationtech.proj4j.CoordinateTransformFactory;
 import org.locationtech.proj4j.Proj4jException;
 import org.locationtech.proj4j.ProjCoordinate;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import edu.mit.ll.nics.android.database.entities.LayerFeature;
@@ -603,6 +609,207 @@ public class GeoUtils {
 //
 //        }
 //    }
+
+public static ArrayList<LayerFeature> parseKmlFile(File kmlFile, File directory) {
+    ArrayList<LayerFeature> features = new ArrayList<>();
+    try {
+        StringBuilder fileContent = new StringBuilder();
+        try (FileInputStream fis = new FileInputStream(kmlFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                fileContent.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+            }
+        }
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        XmlPullParser parser = factory.newPullParser();
+        parser.setInput(new StringReader(fileContent.toString()));
+        HashMap<String, Map<String, String>> stylesMap = collectStyles(parser);
+        parser.setInput(new StringReader(fileContent.toString()));
+        features = parseFeatures(parser, stylesMap, directory);
+    } catch (IOException | XmlPullParserException e) {
+        Timber.tag("KML Parsing").e(e, "Failed to parse KML file manually.");
+    }
+    return features;
+}
+    private static HashMap<String, Map<String, String>> collectStyles(XmlPullParser parser) throws IOException, XmlPullParserException {
+        HashMap<String, Map<String, String>> stylesMap = new HashMap<>();
+        int eventType = parser.getEventType();
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
+                String tagName = parser.getName();
+                if (tagName.equalsIgnoreCase("Style")) {
+                    String styleId = parser.getAttributeValue(null, "id");
+                    if (styleId != null) {
+                        styleId = styleId.trim();
+                        Map<String, String> style = parseStyle(parser);
+                        stylesMap.put(styleId, style);
+                    }
+                }
+            }
+            eventType = parser.next();
+        }
+        return stylesMap;
+    }
+    private static ArrayList<LayerFeature> parseFeatures(XmlPullParser parser, HashMap<String, Map<String, String>> stylesMap, File directory) throws IOException, XmlPullParserException {
+        ArrayList<LayerFeature> features = new ArrayList<>();
+        LayerFeature currentFeature = null;
+        ArrayList<LatLng> coordinates = null;
+        String styleUrl = null;
+
+        int eventType = parser.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            switch (eventType) {
+                case XmlPullParser.START_TAG:
+                    String tagName = parser.getName();
+                    if (tagName.equalsIgnoreCase("Placemark")) {
+                        currentFeature = new LayerFeature();
+                        currentFeature.setType("marker");
+                        coordinates = new ArrayList<>();
+                        currentFeature.setProperties(new HashMap<>());
+                    } else if (currentFeature != null) {
+                        switch (tagName) {
+                            case "name":
+                                //currentFeature.setName(parser.nextText().trim());
+                                break;
+                            case "description":
+                                //currentFeature.setDescription(parser.nextText().trim());
+                                break;
+                            case "coordinates":
+                                String coordText = parser.nextText().trim();
+                                String[] coordArray = coordText.split("\\s+");
+                                for (String coord : coordArray) {
+                                    String[] lngLat = coord.split(",");
+                                    double lng = Double.parseDouble(lngLat[0]);
+                                    double lat = Double.parseDouble(lngLat[1]);
+                                    coordinates.add(new LatLng(lat, lng));
+                                }
+                                break;
+                            case "styleUrl":
+                                styleUrl = parser.nextText().trim();
+                                if (styleUrl.startsWith("#")) {
+                                    styleUrl = styleUrl.substring(1);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+
+                case XmlPullParser.END_TAG:
+                    if (parser.getName().equalsIgnoreCase("Placemark") && currentFeature != null) {
+                        currentFeature.setCoordinates(coordinates);
+                        Timber.tag("weird stuff").d("Placemark StyleUrl: %s", styleUrl);
+                        Timber.tag("weird stuff").d("Placemark StyleUrl content: %s", stylesMap.get(styleUrl));
+                        if (styleUrl != null && stylesMap.containsKey(styleUrl)) {
+                            applyStyleToFeature(currentFeature, stylesMap.get(styleUrl), directory);
+                        }
+                        features.add(new LayerFeature(
+                                LayerFeature.hash(coordinates, currentFeature.getProperties()),
+                                coordinates,
+                                currentFeature.getProperties(),
+                                "marker"
+                        ));
+                        features.add(currentFeature);
+                        currentFeature = null;
+                        coordinates = null;
+                        styleUrl = null;
+                    }
+                    break;
+            }
+            eventType = parser.next();
+        }
+        return features;
+    }
+
+    private static Map<String, String> parseStyle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        Map<String, String> styleMap = new HashMap<>();
+        int eventType = parser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("Style"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                String tagName = parser.getName();
+                switch (tagName) {
+                    case "IconStyle":
+                        styleMap.put("iconUrl", parseIconStyle(parser));
+                        break;
+                    case "PolyStyle":
+                        styleMap.put("fillColor", parsePolyStyle(parser));
+                        break;
+                    case "LabelStyle":
+                        styleMap.put("labelColor", parseLabelStyle(parser));
+                        break;
+                }
+            }
+            eventType = parser.next();
+        }
+        return styleMap;
+    }
+
+    private static String parseIconStyle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String iconUrl = null;
+        int eventType = parser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("IconStyle"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                String tagName = parser.getName();
+                if (tagName.equalsIgnoreCase("href")) {
+                    iconUrl = parser.nextText();
+                }
+            }
+            eventType = parser.next();
+        }
+        return iconUrl;
+    }
+
+    private static String parsePolyStyle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String color = null;
+        int eventType = parser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("PolyStyle"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                String tagName = parser.getName();
+                if (tagName.equalsIgnoreCase("color")) {
+                    color = parser.nextText();
+                }
+            }
+            eventType = parser.next();
+        }
+        return color;
+    }
+
+    private static String parseLabelStyle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String color = null;
+        int eventType = parser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("LabelStyle"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                String tagName = parser.getName();
+                if (tagName.equalsIgnoreCase("color")) {
+                    color = parser.nextText();
+                }
+            }
+            eventType = parser.next();
+        }
+        return color;
+    }
+
+    private static void applyStyleToFeature(LayerFeature feature, Map<String, String> style, File directory) {
+        Map<String, String> properties = feature.getProperties();
+
+        if (style.containsKey("iconUrl")) {
+            File iconFile = new File(directory, style.get("iconUrl"));
+            if (iconFile.exists()) {
+                properties.put("graphic", iconFile.getAbsolutePath());
+            }
+        }
+        properties.put("fillcolor", style.getOrDefault("fillColor", "#FFFFFF"));
+        properties.put("strokecolor", style.getOrDefault("strokeColor", "#808080"));
+        properties.put("strokewidth", String.valueOf(Integer.parseInt(style.getOrDefault("strokeWidth", "3"))));
+        properties.put("opacity", String.valueOf(Float.parseFloat(style.getOrDefault("opacity", "0.4"))));
+        properties.put("rotation", String.valueOf(Double.parseDouble(style.getOrDefault("rotation", "0"))));
+        properties.put("labelsize", String.valueOf(Integer.parseInt(style.getOrDefault("labelSize", "30"))));
+        properties.put("labeltext", style.getOrDefault("labelText", ""));
+        properties.put("dashstyle", style.getOrDefault("dashStyle", ""));
+        properties.put("filename", style.getOrDefault("filename", ""));
+        feature.setProperties(properties);
+    }
 
     public static ArrayList<String> parseGeojsonFile(File file) {
         ArrayList<String> features = new ArrayList<>();

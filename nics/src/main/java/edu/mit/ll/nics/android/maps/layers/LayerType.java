@@ -36,8 +36,8 @@ public enum LayerType {
     ARCGIS_REST("arcgisrest"),
 
     WFS("wfs"),
-
-    GEOJSON("geojson");
+    GEOJSON("geojson"),
+    KMZ("kmz");
 
     private final String type;
 

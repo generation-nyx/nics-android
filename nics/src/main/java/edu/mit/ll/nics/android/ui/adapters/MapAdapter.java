@@ -64,6 +64,8 @@ import edu.mit.ll.nics.android.di.Qualifiers.MainHandler;
 import edu.mit.ll.nics.android.di.Qualifiers.NetworkExecutor;
 import edu.mit.ll.nics.android.maps.LocationSegment;
 import edu.mit.ll.nics.android.maps.layers.ArcGISLayer;
+//import edu.mit.ll.nics.android.maps.layers.KmzLayer;
+import edu.mit.ll.nics.android.maps.layers.KmzLayer;
 import edu.mit.ll.nics.android.maps.layers.Layer;
 import edu.mit.ll.nics.android.maps.layers.LayerType;
 import edu.mit.ll.nics.android.maps.layers.RoomLayer;
@@ -273,6 +275,8 @@ public class MapAdapter {
                     tempLayer = new ArcGISLayer(mActivity, item, mMap, mDownloader);
                 } else if (LayerType.GEOJSON.equals(type) || LayerType.WFS.equals(type)) {
                     tempLayer = new WfsLayer(mActivity, mMap, item, mPreferences);
+                } else if (LayerType.KMZ.equals(type)) {
+                    tempLayer = new KmzLayer(mActivity, mMap, item, mPreferences);
                 } else {
                     Snackbar.make(mRootView, String.format("%s layer type is not yet available.", item.getTypeName()), Snackbar.LENGTH_SHORT).show();
                 }
@@ -282,6 +286,7 @@ public class MapAdapter {
                     try {
                         if (layer != null) {
                             layer.addToMap();
+                            Timber.d("Adding layer to map");
                             for (MarkupBaseShape shape : layer.getFeatures()) {
                                 shape.setClickable(!mIsEditing);
                             }

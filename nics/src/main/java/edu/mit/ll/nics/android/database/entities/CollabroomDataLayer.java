@@ -196,6 +196,15 @@ public class CollabroomDataLayer {
     }
 
     @Override
+    public String toString() {
+        return "CollabroomDataLayer{" +
+                "layerName='" + getLayername() + '\'' +
+                ", layerType='" + getTypeName() + '\'' +
+                ", features='" + getFeatures() + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof CollabroomDataLayer)) return false;
