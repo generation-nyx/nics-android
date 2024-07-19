@@ -692,6 +692,15 @@ public static ArrayList<LayerFeature> parseKmlFile(File kmlFile, File directory)
                                     styleUrl = styleUrl.substring(1);
                                 }
                                 break;
+                            case "Point":
+                                currentFeature.setType("marker");
+                                break;
+                            case "LineString":
+                                currentFeature.setType("sketch");
+                                break;
+                            case "Polygon":
+                                currentFeature.setType("polygon");
+                                break;
                         }
                     }
                     break;
@@ -699,8 +708,6 @@ public static ArrayList<LayerFeature> parseKmlFile(File kmlFile, File directory)
                 case XmlPullParser.END_TAG:
                     if (parser.getName().equalsIgnoreCase("Placemark") && currentFeature != null) {
                         currentFeature.setCoordinates(coordinates);
-                        Timber.tag("weird stuff").d("Placemark StyleUrl: %s", styleUrl);
-                        Timber.tag("weird stuff").d("Placemark StyleUrl content: %s", stylesMap.get(styleUrl));
                         if (styleUrl != null && stylesMap.containsKey(styleUrl)) {
                             applyStyleToFeature(currentFeature, stylesMap.get(styleUrl), directory);
                         }
@@ -708,7 +715,7 @@ public static ArrayList<LayerFeature> parseKmlFile(File kmlFile, File directory)
                                 LayerFeature.hash(coordinates, currentFeature.getProperties()),
                                 coordinates,
                                 currentFeature.getProperties(),
-                                "marker"
+                                currentFeature.getType()
                         ));
                         features.add(currentFeature);
                         currentFeature = null;
