@@ -276,8 +276,12 @@ public class CollabroomLayersWorker extends AppWorker {
                 url = new WfsUrl.Builder(url, name).build().getUrl();
                 break;
             case "kmz":
-                //url = url + "/" + name;
-                url = "https://demo.generationnyx.com/upload/kmz/117941399304552483400017590819012417618.kmz";
+                url = url + "/" + name;
+                int lastSlashIndex = url.lastIndexOf('/');
+                if (lastSlashIndex != -1) {
+                    url = url.substring(0, lastSlashIndex);
+                }
+                url = url + ".kmz";
                 break;
             case "geojson":
             case "gpx":
@@ -329,11 +333,11 @@ public class CollabroomLayersWorker extends AppWorker {
                     deleteFile(downloadedFile);
                     return features;
                 } catch (IOException e) {
-                    Timber.tag("KML Download").e(e, "Failed to save and parse KML/KMZ response.");
+                    Timber.tag(DEBUG).e(e, "Failed to save and parse KML/KMZ response.");
                 }
             }
         } catch (IOException e) {
-            Timber.tag("KML Download").e(e, "Failed to execute KML/KMZ download call.");
+            Timber.tag(DEBUG).e(e, "Failed to execute KML/KMZ download call.");
         }
 
         return null;
@@ -342,11 +346,9 @@ public class CollabroomLayersWorker extends AppWorker {
     private ArrayList<LayerFeature> extractKmlFile(File kmzFile) {
         ArrayList<LayerFeature> features = new ArrayList<>();
         File kmzTempDir = new File(mContext.getCacheDir(), "kmz_temp_dir");
-
         try {
             clearDirectory(kmzTempDir.getPath());
             unzip(kmzFile, kmzTempDir);
-
             File kmlFile = findKmlFile(kmzTempDir);
             if (kmlFile != null) {
                 File nonKmlDir = cacheNonKmlFiles(kmzTempDir);
