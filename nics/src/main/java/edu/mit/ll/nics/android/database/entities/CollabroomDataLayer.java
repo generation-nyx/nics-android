@@ -77,7 +77,7 @@ public class CollabroomDataLayer {
     @Ignore
     private List<LayerFeature> features;
 
-    private boolean active = false;
+    private boolean active = true;
 
     public long getId() {
         return id;
