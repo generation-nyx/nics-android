@@ -281,49 +281,7 @@
                                 </androidx.appcompat.widget.LinearLayoutCompat>
                             </androidx.appcompat.widget.LinearLayoutCompat>
 
-                            <androidx.appcompat.widget.LinearLayoutCompat
-                                android:id="@+id/reportButtonLayout"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical"
-                                android:alpha="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) ? 1.0f : 0.3f}" >
 
-                                <FrameLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="10dp"
-                                    android:background="@color/holo_blue_dark"
-                                    badge="@{eodBadge}"
-                                    badgeVisible="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom) &amp;&amp; viewModel.unreadEODReports.size() > 0}"
-                                    badgeNumber="@{viewModel.unreadEODReports.size()}">
-
-                                    <ImageButton
-                                        android:id="@+id/reportsButton"
-                                        style="@android:style/Widget.Holo.ImageButton"
-                                        android:layout_width="84dp"
-                                        android:layout_height="84dp"
-                                        android:contentDescription="@string/EODREPORTS"
-                                        android:scaleType="fitCenter"
-                                        android:src="@drawable/damage_report_button"
-                                        android:clickable="@{Utils.isIncidentAndCollabroomSelected(viewModel.activeIncident, viewModel.activeCollabroom)}"
-                                        android:onClick="@{() -> fragment.openEODReportFragment()}"/>
-                                </FrameLayout>
-
-                                <androidx.appcompat.widget.LinearLayoutCompat
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_horizontal"
-                                    android:orientation="horizontal">
-
-                                    <com.google.android.material.textview.MaterialTextView
-                                        android:layout_width="110dp"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center_horizontal"
-                                        android:text="@string/EODREPORTS"
-                                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/generalMessageButtonLayout"
