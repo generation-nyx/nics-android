@@ -95,4 +95,5 @@ public class Preferences {
     public static final String MAP_INDOOR_ENABLED = "MAP_INDOOR_ENABLED";
     public static final String MAP_BUILDINGS_ENABLED = "MAP_BUILDINGS_ENABLED";
     public static final String MAP_FULLSCREEN_ENABLED = "MAP_FULLSCREEN_ENABLED";
+    public static final String KEY_COLLABROOM_JUST_JOINED = "COLLABROOM_JUST_JOINED";
 }

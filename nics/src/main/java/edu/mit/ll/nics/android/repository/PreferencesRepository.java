@@ -87,6 +87,7 @@ import static edu.mit.ll.nics.android.utils.constants.Preferences.CUSTOM_SERVER_
 import static edu.mit.ll.nics.android.utils.constants.Preferences.GEO_SERVER;
 import static edu.mit.ll.nics.android.utils.constants.Preferences.IMAGE_UPLOAD_URL;
 import static edu.mit.ll.nics.android.utils.constants.Preferences.IS_ONLINE;
+import static edu.mit.ll.nics.android.utils.constants.Preferences.KEY_COLLABROOM_JUST_JOINED;
 import static edu.mit.ll.nics.android.utils.constants.Preferences.LAST_ACCURACY;
 import static edu.mit.ll.nics.android.utils.constants.Preferences.LAST_ALTITUDE;
 import static edu.mit.ll.nics.android.utils.constants.Preferences.LAST_COURSE;
@@ -119,7 +120,6 @@ import static edu.mit.ll.nics.android.utils.constants.Preferences.WEB_SERVER;
 
 @Singleton
 public class PreferencesRepository {
-
     private final SharedPreferences mPreferences;
     private MyOrgCapabilities mMyOrgCapabilities;
 
@@ -858,5 +858,13 @@ public class PreferencesRepository {
 
     public void setLastSuccessfulServerCommsTimestamp(long timestamp) {
         mPreferences.edit().putLong(LAST_SUCCESSFUL_SERVER_PING, timestamp).apply();
+    }
+
+    public boolean getCollabroomJustJoined() {
+        return mPreferences.getBoolean(KEY_COLLABROOM_JUST_JOINED, false);
+    }
+
+    public void setCollabroomJustJoined(boolean justJoined) {
+        mPreferences.edit().putBoolean(KEY_COLLABROOM_JUST_JOINED, justJoined).apply();
     }
 }

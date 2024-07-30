@@ -142,6 +142,7 @@ public class CollabroomsDialog extends AppDialog {
      */
     private final RecyclerViewItemCallback<Collabroom> mClickCallback = collabroom -> {
         mPreferences.setSelectedCollabroom(collabroom);
+        mPreferences.setCollabroomJustJoined(true);
         dismiss();
     };
 
