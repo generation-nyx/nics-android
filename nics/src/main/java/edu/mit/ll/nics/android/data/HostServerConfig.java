@@ -44,7 +44,7 @@ public class HostServerConfig {
 
     // The default servers for selection.
     public static final ImmutableList<String> DEFAULT_SERVERS =
-            ImmutableList.of("demo2.hadrsys.info", "dev3.hadrsys.info");
+            ImmutableList.of("nics.msb.gov.ba");
 
     private ArrayList<Link> links;
 
