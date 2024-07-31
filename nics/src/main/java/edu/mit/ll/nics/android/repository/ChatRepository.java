@@ -133,6 +133,11 @@ public class ChatRepository {
     public void markAllRead(long incidentId, long collabroomId) {
         mExecutor.execute(() -> mDao.markAllRead(incidentId, collabroomId));
     }
+    public void deleteChatFromDatabase(long chatId) {
+        mExecutor.execute(() -> {
+            mDao.deleteChatById(chatId);
+        });
+    }
 
     /**
      * Returns a {@link LiveData} {@link PagingData<Chat>} for use with a {@link RecyclerView}.

@@ -30,6 +30,7 @@
 package edu.mit.ll.nics.android.ui.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -75,7 +76,7 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
         binding.setCallback(mClickCallback);
         binding.setViewModel(mViewModel);
         binding.setPreferences(mPreferences);
-        return new ChatViewHolder(binding);
+        return new ChatViewHolder(binding, mViewModel);
     }
 
     @Override
@@ -104,16 +105,32 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
         final ChatItemBinding binding;
+        final ChatViewModel viewModel;
 
-        public ChatViewHolder(ChatItemBinding binding) {
+        public ChatViewHolder(ChatItemBinding binding, ChatViewModel viewModel) {
             super(binding.getRoot());
             this.binding = binding;
+            this.viewModel = viewModel;
         }
 
         void bind(Chat chat) {
             if (chat != null) {
                 binding.setChat(chat);
                 binding.executePendingBindings();
+                boolean isVisible = viewModel.getDeleteButtonVisibility(chat);
+                binding.deleteButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+                binding.message.setOnLongClickListener(v -> {
+                    viewModel.toggleDeleteButtonVisibility(chat);
+                    boolean newVisibility = viewModel.getDeleteButtonVisibility(chat);
+                    binding.deleteButton.setVisibility(newVisibility ? View.VISIBLE : View.GONE);
+                    return true;
+                });
+
+                binding.deleteButton.setOnClickListener(v -> {
+                    viewModel.toggleDeleteButtonVisibility(chat);
+                    viewModel.softDeleteChat(chat);
+                });
             }
         }
 

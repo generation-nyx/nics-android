@@ -38,6 +38,9 @@ import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -50,9 +53,14 @@ import edu.mit.ll.nics.android.di.Qualifiers.PagedListConfig;
 import edu.mit.ll.nics.android.repository.ChatRepository;
 import edu.mit.ll.nics.android.repository.PreferencesRepository;
 import edu.mit.ll.nics.android.utils.livedata.NonNullMutableLiveData;
+import edu.mit.ll.nics.android.workers.ChatWorkers;
 import kotlinx.coroutines.CoroutineScope;
+import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @HiltViewModel
 public class ChatViewModel extends ViewModel {
@@ -68,6 +76,8 @@ public class ChatViewModel extends ViewModel {
     private final NonNullMutableLiveData<String> mSearch = new NonNullMutableLiveData<>(EMPTY);
     private final NonNullMutableLiveData<String> mChatMessage = new NonNullMutableLiveData<>(EMPTY);
     private final MediatorLiveData<PagingData<Chat>> mChat = new MediatorLiveData<>();
+    private final PreferencesRepository mPreferences;
+    private final Map<Long, Boolean> deleteButtonVisibilityMap = new HashMap<>();
 
     @Inject
     public ChatViewModel(@PagedListConfig PagingConfig pagingConfig,
@@ -80,11 +90,12 @@ public class ChatViewModel extends ViewModel {
 
         mStartDate = new NonNullMutableLiveData<>(repository.getOldestChatTimestamp(collabroomId));
         mEndDate = new NonNullMutableLiveData<>(DateTime.now(DateTimeZone.UTC).getMillis());
+        mPreferences = preferences;
+
 
         Pager<Integer, Chat> pager = new Pager<>(pagingConfig, () -> repository.getChats(incidentId, collabroomId));
         mChat.addSource(PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope), mChat::postValue);
     }
-
     public LiveData<PagingData<Chat>> getChat() {
         return mChat;
     }
@@ -144,5 +155,40 @@ public class ChatViewModel extends ViewModel {
 
     public void setEndDate(long startDate) {
         mEndDate.postValue(startDate);
+    }
+
+    public boolean getDeleteButtonVisibility(Chat chat) {
+        return Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chat.getId(), false));
+    }
+
+    public void toggleDeleteButtonVisibility(Chat chat) {
+        if (chat != null) {
+            String currentUserName = mPreferences.getUserName();
+            if (chat.getUserOrganization().getUser().getUserName().equalsIgnoreCase(currentUserName)) {
+                Long chatId = chat.getId();
+                boolean currentVisibility = Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chatId, false));
+                deleteButtonVisibilityMap.put(chatId, !currentVisibility);
+            }
+        }
+    }
+    public void softDeleteChat(Chat chat) {
+        Timber.tag("ChatWorkers").d("Starting ChatWorkers.Get startWork() method.");
+        long collabroomId = chat.getCollabroomId();
+        long chatMsgId = chat.getChatId();
+        long userOrgId = mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId();
+        long incidentId = mPreferences.getSelectedIncidentId();
+        String username = mPreferences.getUserName();
+        Data inputData = new Data.Builder()
+                .putLong("collabroomId", collabroomId)
+                .putLong("chatMsgId", chatMsgId)
+                .putLong("userOrgId", userOrgId)
+                .putLong("incidentId", incidentId)
+                .putString("username", username)
+                .build();
+        OneTimeWorkRequest deleteWorkRequest = new OneTimeWorkRequest.Builder(ChatWorkers.Delete.class)
+                .setInputData(inputData)
+                .build();
+        WorkManager.getInstance().enqueue(deleteWorkRequest);
+        WorkManager.getInstance().getWorkInfoByIdLiveData(deleteWorkRequest.getId());
     }
 }
