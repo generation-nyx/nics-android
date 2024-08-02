@@ -3,13 +3,9 @@ package edu.mit.ll.nics.android.maps.layers;
 import android.app.Activity;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.data.kml.KmlLineString;
-import com.google.maps.android.data.kml.KmlPlacemark;
-import com.google.maps.android.data.kml.KmlPoint;
-import com.google.maps.android.data.kml.KmlPolygon;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -43,13 +39,11 @@ public class KmzLayer extends Layer {
     private void addFeaturesToMap() {
         if (mLayer.getFeatures() != null) {
             ExecutorService service = Executors.newCachedThreadPool();
-
-            for (LayerFeature feature : mLayer.getFeatures()) {
+            List<LayerFeature> features = new ArrayList<>(mLayer.getFeatures());
+            for (LayerFeature feature : features) {
                 service.execute(() -> addFeature(feature));
             }
-
             service.shutdown();
-
             try {
                 service.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
@@ -58,26 +52,6 @@ public class KmzLayer extends Layer {
         }
     }
 
-    private LayerFeature convertPlacemarkToFeature(KmlPlacemark placemark) {
-        LayerFeature feature = new LayerFeature();
-
-        ArrayList<LatLng> coordinates = new ArrayList<>();
-        if (placemark.getGeometry() instanceof KmlPoint) {
-            coordinates.add(((KmlPoint) placemark.getGeometry()).getGeometryObject());
-            feature.setCoordinates(coordinates);
-            feature.setType("marker");
-        } else if (placemark.getGeometry() instanceof KmlPolygon) {
-            coordinates.addAll(((KmlPolygon) placemark.getGeometry()).getOuterBoundaryCoordinates());
-            feature.setCoordinates(coordinates);
-            feature.setType("polygon");
-        } else if (placemark.getGeometry() instanceof KmlLineString) {
-            coordinates.addAll(((KmlLineString) placemark.getGeometry()).getGeometryObject());
-            feature.setCoordinates(coordinates);
-            feature.setType("line");
-        }
-
-        return feature;
-    }
 
     private void addFeature(LayerFeature feature) {
         MarkupType type = MarkupType.valueOf(feature.getType());
@@ -130,7 +104,6 @@ public class KmzLayer extends Layer {
 
     @Override
     public void removeFromMap() {
-        Timber.tag(DEBUG).i("clearFromMap");
         for (MarkupBaseShape feature : mFeatures) {
             feature.removeFromMap();
         }

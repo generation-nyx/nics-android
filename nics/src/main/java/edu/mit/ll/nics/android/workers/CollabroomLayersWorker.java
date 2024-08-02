@@ -47,10 +47,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +81,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.utils.FileUtils.clearDirectory;
+import static edu.mit.ll.nics.android.utils.FileUtils.copyFile;
 import static edu.mit.ll.nics.android.utils.FileUtils.createTempFile;
 import static edu.mit.ll.nics.android.utils.FileUtils.deleteFile;
 import static edu.mit.ll.nics.android.utils.GeoUtils.bufferGeometry;
@@ -132,7 +135,6 @@ public class CollabroomLayersWorker extends AppWorker {
                     CollabroomLayerMessage message = response.body();
                     if (message != null && message.getLayers().size() > 0) {
                         parseCollabroomLayers(collabroomId, message.getLayers());
-                        Timber.tag("LayerResponse").d("API Response: %s", message.toJson());
                         Timber.tag(DEBUG).i("Successfully received Collabroom Layers: %s", message.getCount());
                     } else {
                         Timber.tag(DEBUG).w("Received empty Collabroom Layers. Status Code: %s", response.code());
@@ -324,7 +326,6 @@ public class CollabroomLayersWorker extends AppWorker {
         Call<ResponseBody> call = mDownloader.download(url);
         try {
             Response<ResponseBody> response = call.execute();
-            Timber.tag("KMZ Response").d("Response: %s", response.body());
             if (response.body() != null) {
                 try (InputStream stream = response.body().byteStream()) {
                     File downloadedFile = createTempFile(tempDirectory);
@@ -345,7 +346,8 @@ public class CollabroomLayersWorker extends AppWorker {
 
     private ArrayList<LayerFeature> extractKmlFile(File kmzFile) {
         ArrayList<LayerFeature> features = new ArrayList<>();
-        File kmzTempDir = new File(mContext.getCacheDir(), "kmz_temp_dir");
+        String uniqueTempDirName = UUID.randomUUID().toString();
+        File kmzTempDir = new File(mContext.getCacheDir(), "kmz_temp_dir" + uniqueTempDirName);
         try {
             clearDirectory(kmzTempDir.getPath());
             unzip(kmzFile, kmzTempDir);
@@ -398,19 +400,34 @@ public class CollabroomLayersWorker extends AppWorker {
         if (!cacheDir.exists()) {
             cacheDir.mkdirs();
         }
-
-        for (File file : directory.listFiles()) {
-            if (!file.getName().endsWith(".kml")) {
-                File cachedFile = new File(cacheDir, file.getName());
-                try {
-                    Files.copy(file, cachedFile);
-                    Timber.d("Cached non-KML file: %s", cachedFile.getAbsolutePath());
-                } catch (IOException e) {
-                    Timber.e(e, "Failed to cache non-KML file: %s", file.getName());
-                    return null;
-                }
-            }
+        try {
+            cacheFilesRecursively(directory, cacheDir);
+        } catch (IOException e) {
+            Timber.e(e, "Failed to cache non-KML files from directory: %s", directory.getName());
+            return null;
         }
         return cacheDir;
     }
+
+    private void cacheFilesRecursively(File sourceDir, File destinationDir) throws IOException {
+        for (File file : sourceDir.listFiles()) {
+            if (file.isDirectory()) {
+                File newDir = new File(destinationDir, file.getName());
+                if (!newDir.exists()) {
+                    newDir.mkdirs();
+                }
+                cacheFilesRecursively(file, newDir);
+            } else if (!file.getName().endsWith(".kml")) {
+                File destFile = new File(destinationDir, file.getName());
+                try (InputStream in = new FileInputStream(file);
+                     OutputStream out = new FileOutputStream(destFile)) {
+                    copyFile(in, out);
+                } catch (IOException e) {
+                    Timber.e(e, "Failed to cache file: %s", file.getName());
+                    throw e;
+                }
+            }
+        }
+    }
+
 }
