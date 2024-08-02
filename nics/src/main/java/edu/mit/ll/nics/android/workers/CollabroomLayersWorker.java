@@ -238,7 +238,6 @@ public class CollabroomLayersWorker extends AppWorker {
                     dataLayer.setFeatures(features);
                     dataLayer.setCollabroomId(collabroomId);
                     mRepository.addCollabroomLayerToDatabase(dataLayer);
-                    Timber.tag(DEBUG).d("Collabroom Layer Database: %s", mRepository.getCollabroomLayers(collabroomId));
                     Timber.tag(DEBUG).i("Downloaded %s", dataLayer.getDisplayName());
                 } catch (AssertionError e) {
                     Timber.tag(DEBUG).e(e, "Failed to add collabroom layer.");

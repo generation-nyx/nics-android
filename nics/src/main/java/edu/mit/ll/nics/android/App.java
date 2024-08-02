@@ -72,7 +72,6 @@ public class App extends Application implements Configuration.Provider {
     @Override
     public void onCreate() {
         super.onCreate();
-        org.osmdroid.config.Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugLogTree());

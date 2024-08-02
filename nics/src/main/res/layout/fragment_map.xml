@@ -83,12 +83,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="2dp" />
 
-            <org.osmdroid.views.MapView
-                android:id="@+id/osmMapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/mapButtons"
                 android:orientation="horizontal"

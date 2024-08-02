@@ -64,7 +64,6 @@ import edu.mit.ll.nics.android.di.Qualifiers.MainHandler;
 import edu.mit.ll.nics.android.di.Qualifiers.NetworkExecutor;
 import edu.mit.ll.nics.android.maps.LocationSegment;
 import edu.mit.ll.nics.android.maps.layers.ArcGISLayer;
-//import edu.mit.ll.nics.android.maps.layers.KmzLayer;
 import edu.mit.ll.nics.android.maps.layers.KmzLayer;
 import edu.mit.ll.nics.android.maps.layers.Layer;
 import edu.mit.ll.nics.android.maps.layers.LayerType;
@@ -286,7 +285,6 @@ public class MapAdapter {
                     try {
                         if (layer != null) {
                             layer.addToMap();
-                            Timber.d("Adding layer to map");
                             for (MarkupBaseShape shape : layer.getFeatures()) {
                                 shape.setClickable(!mIsEditing);
                             }

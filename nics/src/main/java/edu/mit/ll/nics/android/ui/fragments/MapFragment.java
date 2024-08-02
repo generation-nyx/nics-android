@@ -75,10 +75,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.TileOverlay;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -137,16 +133,12 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         GoogleMap.OnCameraMoveStartedListener {
 
     public GoogleMap mMap;
-    private MapView osmMapView;
     private Marker mInfoMarker;
     private SupportMapFragment mMapFragment;
     private MapViewModel mViewModel;
     private FragmentMapBinding mBinding;
     private MapAdapter mMapAdapter;
-    private TileOverlay offlineTileOverlay;
-
     private boolean mEventsRegistered = false;
-
     private Sensor mRotationSensor;
     private SensorEventListener mSensorEventListener;
 
@@ -192,15 +184,13 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
 
     /**
      * Bind to the layout for this fragment.
-     *
+     * <p>
      * The layout resource file for this fragment is located at
      * nics/src/main/res/layout/fragment_map.xml.
      */
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false);
-        osmMapView = mBinding.getRoot().findViewById(R.id.osmMapView);
-        initializeOsmMap();
         return mBinding.getRoot();
     }
 
@@ -335,7 +325,7 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
             openTrackingLayersPicker();
         } else if (id == R.id.mapDataLayersOption) {
             openCollabroomLayersPicker();
-        } else if(id == R.id.incidentRoomsOption) {
+        } else if (id == R.id.incidentRoomsOption) {
             openOverlappingRoomLayersPicker();
         } else if (id == R.id.geocodeLocationOption) {
             openGeocodingMenu();
@@ -396,7 +386,7 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
      * Initializes the map if it hasn't been already. This will call
      * {@link SupportMapFragment#getMapAsync(OnMapReadyCallback)} which will
      * build initialize the map asynchronously.
-     *
+     * <p>
      * After the map is setup, our OnMapReady callback method will be called to setup everything
      * since it needs to wait for the map to actually be ready before adding to it.
      */
@@ -602,7 +592,6 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
     }
 
     private void openCollabroomLayersPicker() {
-        osmMapView.getTileProvider().clearTileCache();
         navigateSafe(mNavController, MapFragmentDirections.collabroomLayersPicker());
     }
 
@@ -698,15 +687,16 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         });
 
         compass.setOnTouchListener((v, event) -> {
-             if (gestureDetector.onTouchEvent(event)) {
-                 mViewModel.toggleCompassMode();
-             }
-             return true;
+            if (gestureDetector.onTouchEvent(event)) {
+                mViewModel.toggleCompassMode();
+            }
+            return true;
         });
     }
 
     private void toggleCompassMode(boolean isCompassMode) {
-        if (isCompassMode) startCompassMode(); else stopCompassMode();
+        if (isCompassMode) startCompassMode();
+        else stopCompassMode();
     }
 
     public void startCompassMode() {
@@ -831,17 +821,12 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
     private void setMapType(Integer mapType) {
         if (mMap != null && mapType != null) {
             mMap.setMapType(mapType);
-            if (mapType == 0) {
-                osmMapView.setVisibility(View.VISIBLE);
-            } else {
-                osmMapView.setVisibility(View.GONE);
-            }
         }
     }
 
     /**
      * Sets the maps style to be the selected style from the {@link MapStylePickerDialog}.
-     *
+     * <p>
      * The resource will be loaded from the nics/src/main/res/raw/ directory. The styles are the default styles
      * from the Google Maps Styling Wizard at https://mapstyle.withgoogle.com/.
      *
@@ -910,7 +895,7 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
 
     /**
      * Updates the declination values from the location that is passed from the {@link LocationService}.
-     *
+     * <p>
      * This is called when the location changed event is triggered.
      *
      * @param location The {@link Location} that is passed from the {@link LocationService}.
@@ -919,10 +904,10 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         try {
             if (location != null) {
                 GeomagneticField field = new GeomagneticField(
-                    (float) location.getLatitude(),
-                    (float) location.getLongitude(),
-                    (float) location.getAltitude(),
-                    System.currentTimeMillis()
+                        (float) location.getLatitude(),
+                        (float) location.getLongitude(),
+                        (float) location.getAltitude(),
+                        System.currentTimeMillis()
                 );
                 mLastDeclination = mDeclination;
                 mDeclination = field.getDeclination();
@@ -932,21 +917,5 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         } catch (Exception e) {
             Timber.tag(DEBUG).e(e, "Failed to parse declination in onLocationChangedReceiver.");
         }
-    }
-
-    @SuppressLint("TimberArgCount")
-    public void initializeOsmMap() {
-        Timber.tag(DEBUG).d("Initializing OSM");
-        osmMapView.setTileSource(TileSourceFactory.MAPNIK);
-        osmMapView.getTileProvider().clearTileCache();
-        osmMapView.setMultiTouchControls(true);
-
-        GeoPoint startPoint = new GeoPoint(41.8781, 87.6298);
-        osmMapView.setMaxZoomLevel(19.0);
-        //osmMapView.getController().setZoom(7.0);
-        //osmMapView.setMaxZoomLevel(18.0);
-        osmMapView.getController().setCenter(startPoint);
-
-        osmMapView.setUseDataConnection(true);
     }
 }
