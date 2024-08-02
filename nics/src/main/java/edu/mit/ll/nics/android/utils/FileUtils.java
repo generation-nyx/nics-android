@@ -58,6 +58,8 @@ public class FileUtils {
      */
     public static void clearTempFolder(Context context) {
         clearDirectory(context.getCacheDir() + NICS_TEMP_FOLDER);
+        File kmzCacheDir = new File(context.getCacheDir(), "kmz_cache");
+        clearDirectory(kmzCacheDir.getAbsolutePath());
     }
 
     /**
