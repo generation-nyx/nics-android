@@ -75,6 +75,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="net.openid.appauth.AuthorizationManagementActivity"
+            android:launchMode="@integer/launch_mode_for_app_auth"
+            tools:replace="android:launchMode" />
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/config_google_maps_api_key" />
