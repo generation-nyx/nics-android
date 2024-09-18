@@ -272,6 +272,10 @@ public class CollabroomLayersWorker extends AppWorker {
         String name = layer.getLayername();
         String type = layer.getTypeName();
 
+        Timber.tag(DEBUG).d("Layer name: %s", name);
+        Timber.tag(DEBUG).d("Layer type: %s", type);
+        Timber.tag(DEBUG).d("Layer URL: %s", url);
+
         switch (type) {
             case "wfs":
                 url = new WfsUrl.Builder(url, name).build().getUrl();
@@ -283,6 +287,7 @@ public class CollabroomLayersWorker extends AppWorker {
                     url = url.substring(0, lastSlashIndex);
                 }
                 url = url + ".kmz";
+                Timber.tag(DEBUG).d("Layer URL Again: %s", url);
                 break;
             case "geojson":
             case "gpx":

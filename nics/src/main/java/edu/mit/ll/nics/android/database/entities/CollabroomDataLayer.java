@@ -29,6 +29,7 @@
  */
 package edu.mit.ll.nics.android.database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -195,12 +196,19 @@ public class CollabroomDataLayer {
         return type.equals(LayerType.WFS) || type.equals(LayerType.GEOJSON);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "CollabroomDataLayer{" +
-                "layerName='" + getLayername() + '\'' +
-                ", layerType='" + getTypeName() + '\'' +
-                ", features='" + getFeatures() + '\'' +
+                "id=" + id +
+                ", datalayerId='" + datalayerId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", created='" + created + '\'' +
+                ", collabroomId=" + collabroomId +
+                ", datalayerSource=" + datalayerSource +
+                ", collabroomDatalayers=" + collabroomDatalayers +
+                ", features=" + features +
+                ", active=" + active +
                 '}';
     }
 
@@ -305,6 +313,17 @@ public class CollabroomDataLayer {
                     .append(getLayerName())
                     .toHashCode();
         }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "DataLayerSource{" +
+                    "dataSource=" + dataSource +
+                    ", refreshRate=" + refreshRate +
+                    ", layerName='" + layerName + '\'' +
+                    ", attributes=" + attributes +
+                    '}';
+        }
     }
 
     public static class DataSource {
@@ -352,6 +371,15 @@ public class CollabroomDataLayer {
                     .append(getInternalUrl())
                     .toHashCode();
         }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "DataSource{" +
+                    "dataSourceType=" + dataSourceType +
+                    ", internalUrl='" + internalUrl + '\'' +
+                    '}';
+        }
     }
 
     public static class DataSourceType {
@@ -384,6 +412,14 @@ public class CollabroomDataLayer {
             return new HashCodeBuilder()
                     .append(getTypeName())
                     .toHashCode();
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "DataSourceType{" +
+                    "typeName='" + typeName + '\'' +
+                    '}';
         }
     }
 }

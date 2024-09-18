@@ -29,6 +29,7 @@
  */
 package edu.mit.ll.nics.android.database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -167,6 +168,20 @@ public class EmbeddedCollabroomDatalayer {
                 .append(getCollabroomOpacity())
                 .append(getHazard())
                 .toHashCode();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "EmbeddedCollabroomDatalayer{" +
+                "id=" + id +
+                ", collabroomId=" + collabroomId +
+                ", datalayerId='" + datalayerId + '\'' +
+                ", collabroomDatalayerId=" + collabroomDatalayerId +
+                ", enableMobile=" + enableMobile +
+                ", collabroomOpacity=" + collabroomOpacity +
+                ", hazard=" + hazard +
+                '}';
     }
 }
 

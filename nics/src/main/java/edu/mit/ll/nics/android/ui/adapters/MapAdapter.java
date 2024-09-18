@@ -275,6 +275,8 @@ public class MapAdapter {
                 } else if (LayerType.GEOJSON.equals(type) || LayerType.WFS.equals(type)) {
                     tempLayer = new WfsLayer(mActivity, mMap, item, mPreferences);
                 } else if (LayerType.KMZ.equals(type)) {
+                    Timber.tag("LayerType").w("KMZ");
+                    Timber.tag("LayerType").w(item.toString());
                     tempLayer = new KmzLayer(mActivity, mMap, item, mPreferences);
                 } else {
                     Snackbar.make(mRootView, String.format("%s layer type is not yet available.", item.getTypeName()), Snackbar.LENGTH_SHORT).show();
