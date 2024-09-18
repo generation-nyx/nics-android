@@ -102,6 +102,11 @@ public class ChatRepository {
         mExecutor.execute(() -> mDao.replace(chat));
     }
 
+    public void deleteChat(Chat chat) {
+        chat.setIsDeleted(true);
+        addChatToDatabase(chat);
+    }
+
     public void addChatToDatabase(Chat chat, SimpleThreadCallback callback) {
         mExecutor.execute(() -> {
             mDao.replace(chat);
@@ -143,8 +148,15 @@ public class ChatRepository {
      * in the recycler view.
      */
     public PagingSource<Integer, Chat> getChats(long incidentId, long collabroomId) {
-        String queryString = "SELECT * FROM " + CHAT_TABLE + " WHERE incidentId = ? AND collabroomId = ? ORDER BY created ASC";
+        String queryString = "SELECT * FROM " + CHAT_TABLE + " WHERE incidentId = ? AND collabroomId = ? AND isDeleted = 0 ORDER BY created ASC";
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryString, new Object[]{incidentId, collabroomId});
         return mDao.getChats(query);
     }
+
+//    All chats, including the 'soft' deleted ones.
+//    public PagingSource<Integer, Chat> getChats(long incidentId, long collabroomId) {
+//        String queryString = "SELECT * FROM " + CHAT_TABLE + " WHERE incidentId = ? AND collabroomId = ? ORDER BY created ASC";
+//        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryString, new Object[]{incidentId, collabroomId});
+//        return mDao.getChats(query);
+//    }
 }

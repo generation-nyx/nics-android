@@ -31,6 +31,7 @@ package edu.mit.ll.nics.android.data.messages;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import edu.mit.ll.nics.android.database.entities.Chat;
@@ -39,12 +40,22 @@ public class ChatMessage extends Message {
 
     private ArrayList<Chat> chats;
 
+    private ArrayList<Chat> deleted = new ArrayList<>();
+
     public ArrayList<Chat> getChats() {
         return chats;
     }
 
     public void setChats(ArrayList<Chat> chats) {
         this.chats = chats;
+    }
+
+    public ArrayList<Chat> getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(ArrayList<Chat> deleted) {
+        this.deleted = deleted;
     }
 
     public String toJson() {

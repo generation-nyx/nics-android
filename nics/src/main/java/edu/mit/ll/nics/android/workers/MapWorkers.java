@@ -167,7 +167,7 @@ public class MapWorkers {
             }
 
             ArrayList<MarkupFeature> features = message.getFeatures();
-            if (features != null && features.size() > 0) {
+            if (features != null && !features.isEmpty()) {
                 for (MarkupFeature feature : features) {
                     feature.setCollabRoomId(collabroomId);
                     feature.setSendStatus(SendStatus.RECEIVED);

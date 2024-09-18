@@ -71,7 +71,7 @@ public class ChatWorkers {
     @HiltWorker
     public static class Get extends AppWorker {
 
-        private final ChatRepository mChatRepository;
+        private final ChatRepository mRepository;
         private final PersonalHistoryRepository mPersonalHistory;
         private final PreferencesRepository mPreferences;
         private final ChatApiService mApiService;
@@ -85,7 +85,7 @@ public class ChatWorkers {
                    ChatApiService chatApiService) {
             super(context, workerParams);
 
-            mChatRepository = chatRepository;
+            mRepository = chatRepository;
             mPersonalHistory = personalHistory;
             mPreferences = preferences;
             mApiService = chatApiService;
@@ -101,13 +101,13 @@ public class ChatWorkers {
                 long collabroomId = mPreferences.getSelectedCollabroomId();
                 long incidentId = mPreferences.getSelectedIncidentId();
 
-                Call<ChatMessage> call = mApiService.getChats(collabroomId, mChatRepository.getLastChatTimestamp(collabroomId) + 1);
+                Call<ChatMessage> call = mApiService.getChats(collabroomId, mRepository.getLastChatTimestamp(collabroomId) + 1);
                 call.enqueue(new AuthCallback<>(new Callback<ChatMessage>() {
                     @Override
                     public void onResponse(@NotNull Call<ChatMessage> call, @NotNull Response<ChatMessage> response) {
                         mPreferences.setLastSuccessfulServerCommsTimestamp(System.currentTimeMillis());
                         ChatMessage message = response.body();
-                        if (message != null && message.getChats() != null && message.getChats().size() > 0) {
+                        if (message != null && message.getChats() != null && !message.getChats().isEmpty()) {
                             parseChatMessages(message);
                             Timber.tag(DEBUG).i("Successfully received chat information for: %s - %s", incidentId, collabroomId);
                         } else {
@@ -140,7 +140,7 @@ public class ChatWorkers {
                 chat.setSendStatus(SendStatus.RECEIVED);
                 chat.setNew(true);
                 chat.setRead(false);
-                mChatRepository.addChatToDatabase(chat);
+                mRepository.addChatToDatabase(chat);
                 numParsed++;
             }
 
@@ -196,7 +196,7 @@ public class ChatWorkers {
                         Timber.tag(DEBUG).i("Successfully posted chat messages");
 
                         ChatMessage message = response.body();
-                        if (message != null && message.getChats() != null && message.getChats().size() > 0) {
+                        if (message != null && message.getChats() != null && !message.getChats().isEmpty()) {
                             ArrayList<Chat> chats = message.getChats();
                             Chat chat = chats.get(0);
                             chat.setId(chatId);
@@ -221,6 +221,75 @@ public class ChatWorkers {
             });
         }
     }
+
+
+    @HiltWorker
+    public static class Delete extends AppWorker {
+
+        private final ChatRepository mRepository;
+        private final PreferencesRepository mPreferences;
+        private final ChatApiService mApiService;
+
+        @AssistedInject
+        public Delete(@Assisted @NonNull Context context,
+                    @Assisted @NonNull WorkerParameters workerParams,
+                    ChatRepository chatRepository,
+                    PreferencesRepository preferencesRepository,
+                    ChatApiService chatApiService) {
+            super(context, workerParams);
+
+            mRepository = chatRepository;
+            mPreferences = preferencesRepository;
+            mApiService = chatApiService;
+        }
+
+        @NonNull
+        @Override
+        public ListenableFuture<Result> startWork() {
+            Timber.tag(DEBUG).d("Starting Chat Delete Worker...");
+
+            return CallbackToFutureAdapter.getFuture(completer -> {
+                long id = getInputData().getLong("id", -1L);
+                Chat chat = mRepository.getChatById(id);
+                long chatId = chat.getId();
+                String userName = mPreferences.getUserName();
+                long userOrgId = mPreferences.getUserOrgId();
+
+                chat.setSendStatus(SendStatus.DELETING);
+                mRepository.addChatToDatabase(chat);
+
+                Timber.tag(DEBUG).i("Adding chat " + id + " to delete queue.");
+
+                Call<ResponseBody> call = mApiService.deleteChat(
+                        chatId,
+                        userOrgId,
+                        chat.getIncidentId(),
+                        userName
+                );
+                call.enqueue(new AuthCallback<>(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                        mPreferences.setLastSuccessfulServerCommsTimestamp(System.currentTimeMillis());
+
+                        // Delete the chat from the local database now that it has been deleted from the server.
+                        mRepository.deleteChat(chat);
+
+                        Timber.tag(DEBUG).i("Successfully deleted chat: %s", chatId);
+                        completer.set(Result.success());
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        Timber.tag(DEBUG).e("Failed to delete Chat Feature information: %s", t.getMessage());
+                        completer.set(Result.failure());
+                    }
+                }));
+
+                return Result.success();
+            });
+        }
+    }
+
 
     @HiltWorker
     public static class ChatPresence extends AppWorker {

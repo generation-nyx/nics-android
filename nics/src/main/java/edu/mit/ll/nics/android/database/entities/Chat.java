@@ -80,12 +80,17 @@ public class Chat {
     @SerializedName("userorgid")
     private long userOrgId;
 
+    @Expose
     @SerializedName("lastupdated")
     private long lastUpdated;
 
     @Embedded(prefix = "userOrg_")
     @SerializedName("userorg")
     private UserOrg userOrganization;
+
+    @Expose
+    @SerializedName("deleted")
+    private Boolean isDeleted;
 
     @Override
     public boolean equals(Object o) {
@@ -144,6 +149,14 @@ public class Chat {
 
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public long getChatId() {

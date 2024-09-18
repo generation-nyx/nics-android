@@ -251,4 +251,33 @@ public class ChatFragment extends AppFragment {
             Timber.tag(DEBUG).e(e, "Failed to send the chat message.");
         }
     }
+
+    public void deleteChat() {
+        try {
+            String message = mViewModel.getChatMessage().getValue().trim();
+
+            if (!message.isEmpty()) {
+                Chat chat = new Chat();
+                long currentTime = System.currentTimeMillis();
+                chat.setMessage(message);
+                chat.setCreated(currentTime);
+                chat.setLastUpdated(currentTime);
+                chat.setUserOrgId(mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId());
+                chat.setIncidentId(mPreferences.getSelectedIncidentId());
+                chat.setUserOrganization(mPreferences.getSelectedOrganization().getUserOrgs().get(0));
+                chat.setCollabroomId(mPreferences.getSelectedCollabroomId());
+                chat.setSeqNum(currentTime);
+                chat.setChatId(currentTime);
+                chat.setSendStatus(SendStatus.WAITING_TO_SEND);
+
+                mRepository.addChatToDatabase(chat, result -> mMainHandler.post(() -> mNetworkRepository.postChatMessages()));
+
+                mViewModel.setChatMessage(EMPTY);
+            } else {
+                Snackbar.make(requireView(), "No chat message to send.", Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Timber.tag(DEBUG).e(e, "Failed to send the chat message.");
+        }
+    }
 }
