@@ -265,6 +265,10 @@ public class ChatWorkers {
                         chat.getIncidentId(),
                         userName
                 );
+
+                Timber.tag(DEBUG).d("Delete chat request: ");
+                Timber.tag(DEBUG).d(call.toString());
+
                 call.enqueue(new AuthCallback<>(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {

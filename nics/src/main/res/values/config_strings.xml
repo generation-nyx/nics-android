@@ -30,8 +30,8 @@
 -->
 <resources>
     <string-array name="config_server_list">
-        <item>demo2.hadrsys.info</item>
-        <item>dev3.hadrsys.info</item>
+        <item>nics.msb.gov.ba</item>
+        <item>demo.generationnyx.com</item>
     </string-array>
 
     <string name="config_google_maps_api_key" translatable="false">"AIzaSyCNQnJfWK0KEsrbnCAqCtZrQDYOPwkJvqk"</string><!-- key from google maps api registration page-->
