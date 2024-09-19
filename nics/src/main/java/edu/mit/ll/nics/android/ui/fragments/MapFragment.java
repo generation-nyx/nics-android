@@ -79,6 +79,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -88,6 +89,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import edu.mit.ll.nics.android.MapPanelNavigationDirections;
 import edu.mit.ll.nics.android.R;
 import edu.mit.ll.nics.android.data.Incident;
+import edu.mit.ll.nics.android.database.entities.CollabroomDataLayer;
 import edu.mit.ll.nics.android.database.entities.EODReport;
 import edu.mit.ll.nics.android.database.entities.GeneralMessage;
 import edu.mit.ll.nics.android.database.entities.Tracking;
@@ -98,6 +100,7 @@ import edu.mit.ll.nics.android.maps.LocationSegment;
 import edu.mit.ll.nics.android.maps.MapMarkupInfoWindowAdapter;
 import edu.mit.ll.nics.android.maps.MapStyle;
 import edu.mit.ll.nics.android.maps.MapType;
+import edu.mit.ll.nics.android.repository.CollabroomLayerRepository;
 import edu.mit.ll.nics.android.repository.EODReportRepository;
 import edu.mit.ll.nics.android.repository.GeneralMessageRepository;
 import edu.mit.ll.nics.android.repository.TrackingLayerRepository;
@@ -164,6 +167,9 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
 
     @Inject
     EODReportRepository mEodReportRepository;
+
+    @Inject
+    CollabroomLayerRepository mCollabroomLayerRepository;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -431,6 +437,21 @@ public class MapFragment extends AppFragment implements OnMapReadyCallback,
         initZoom();
         initDistancePoint();
 
+        if (mPreferences.getCollabroomJustJoined()) {
+            long collabroomId = mPreferences.getSelectedCollabroom().getCollabRoomId();
+            activateCollabroomLayers(collabroomId);
+            mPreferences.setCollabroomJustJoined(false);
+        }
+    }
+
+    private void activateCollabroomLayers(long collabroomId) {
+        List<CollabroomDataLayer> layers = mCollabroomLayerRepository.getCollabroomLayers(collabroomId);
+        if (layers != null && !layers.isEmpty()) {
+            for (CollabroomDataLayer layer : layers) {
+                layer.setActive(true);
+                mCollabroomLayerRepository.updateCollabroomLayer(layer);
+            }
+        }
     }
 
     private void initDistancePoint() {

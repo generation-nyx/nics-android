@@ -1063,4 +1063,5 @@
     <string name="failed_to_receive_incident_information">Failed to receive incident information: </string>
     <string name="invalid_markup">Invalid Markup Data</string>
     <string name="with_task_colon"> with Task: </string>
+    <string name="Delete">Delete</string>
 </resources>

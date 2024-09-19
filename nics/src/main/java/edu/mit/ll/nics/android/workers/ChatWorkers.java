@@ -50,6 +50,7 @@ import edu.mit.ll.nics.android.auth.AuthCallback;
 import edu.mit.ll.nics.android.data.Organization;
 import edu.mit.ll.nics.android.data.Presence;
 import edu.mit.ll.nics.android.data.messages.ChatMessage;
+import edu.mit.ll.nics.android.data.messages.DeleteChatMessage;
 import edu.mit.ll.nics.android.database.entities.Chat;
 import edu.mit.ll.nics.android.enums.PresenceStatus;
 import edu.mit.ll.nics.android.enums.SendStatus;
@@ -222,10 +223,8 @@ public class ChatWorkers {
         }
     }
 
-
     @HiltWorker
     public static class Delete extends AppWorker {
-
         private final ChatRepository mRepository;
         private final PreferencesRepository mPreferences;
         private final ChatApiService mApiService;
@@ -289,7 +288,6 @@ public class ChatWorkers {
             });
         }
     }
-
 
     @HiltWorker
     public static class ChatPresence extends AppWorker {

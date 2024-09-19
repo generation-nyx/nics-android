@@ -187,7 +187,6 @@ public class ChatFragment extends AppFragment {
             // Request an update of the most recent chat messages.
             refresh();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
