@@ -29,6 +29,8 @@
  */
 package edu.mit.ll.nics.android.maps.tileproviders;
 
+import static edu.mit.ll.nics.android.utils.CollectionUtils.getNonNullOrDefault;
+
 import android.net.Uri;
 
 import com.google.android.gms.maps.model.TileProvider;
@@ -153,10 +155,10 @@ public class TileProviderFactory {
                 attrs.putAll(attributes);
             }
 
-            this.styles = attrs.getOrDefault("styles", this.styles);
-            this.version = attrs.getOrDefault("version", this.version);
-            this.format = attrs.getOrDefault("format", this.format);
-            this.crs = attrs.getOrDefault("crs", this.crs);
+            this.styles = getNonNullOrDefault(attrs, "styles", this.styles);
+            this.version = getNonNullOrDefault(attrs,"version", this.version);
+            this.format = getNonNullOrDefault(attrs,"format", this.format);
+            this.crs = getNonNullOrDefault(attrs,"crs", this.crs);
 
             attrs.remove("styles");
             attrs.remove("version");

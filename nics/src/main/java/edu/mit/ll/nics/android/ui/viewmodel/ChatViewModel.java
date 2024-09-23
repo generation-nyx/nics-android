@@ -57,6 +57,7 @@ import edu.mit.ll.nics.android.workers.ChatWorkers;
 import kotlinx.coroutines.CoroutineScope;
 import timber.log.Timber;
 
+import static edu.mit.ll.nics.android.utils.CollectionUtils.getNonNullOrDefault;
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
 
 import java.util.HashMap;
@@ -158,7 +159,7 @@ public class ChatViewModel extends ViewModel {
     }
 
     public boolean getDeleteButtonVisibility(Chat chat) {
-        return Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chat.getId(), false));
+        return Boolean.TRUE.equals(getNonNullOrDefault(deleteButtonVisibilityMap, chat.getId(), false));
     }
 
     public void toggleDeleteButtonVisibility(Chat chat) {
@@ -166,7 +167,7 @@ public class ChatViewModel extends ViewModel {
             String currentUserName = mPreferences.getUserName();
             if (chat.getUserOrganization().getUser().getUserName().equalsIgnoreCase(currentUserName)) {
                 Long chatId = chat.getId();
-                boolean currentVisibility = Boolean.TRUE.equals(deleteButtonVisibilityMap.getOrDefault(chatId, false));
+                boolean currentVisibility = Boolean.TRUE.equals(getNonNullOrDefault(deleteButtonVisibilityMap, chatId, false));
                 deleteButtonVisibilityMap.put(chatId, !currentVisibility);
             }
         }

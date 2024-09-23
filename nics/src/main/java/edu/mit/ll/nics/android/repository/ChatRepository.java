@@ -127,6 +127,10 @@ public class ChatRepository {
         return mDao.getChatById(id);
     }
 
+    public Chat getChatByChatId(long chatId) {
+        return mDao.getChatByChatId(chatId);
+    }
+
     public LiveData<List<Chat>> getNewChats(long incidentId, long collabroomId) {
         return mDao.getNewChats(incidentId, collabroomId, mPreferences.getUserName());
     }
@@ -140,7 +144,7 @@ public class ChatRepository {
     }
     public void deleteChatFromDatabase(long chatId) {
         mExecutor.execute(() -> {
-            mDao.deleteChatById(chatId);
+            mDao.deleteChatByChatId(chatId);
         });
     }
 
@@ -153,7 +157,7 @@ public class ChatRepository {
      * in the recycler view.
      */
     public PagingSource<Integer, Chat> getChats(long incidentId, long collabroomId) {
-        String queryString = "SELECT * FROM " + CHAT_TABLE + " WHERE incidentId = ? AND collabroomId = ? AND isDeleted = 0 ORDER BY created ASC";
+        String queryString = "SELECT * FROM " + CHAT_TABLE + " WHERE incidentId = ? AND collabroomId = ? AND isDeleted = 0 AND sendStatus != 4 AND sendStatus != 5 ORDER BY created ASC";
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryString, new Object[]{incidentId, collabroomId});
         return mDao.getChats(query);
     }

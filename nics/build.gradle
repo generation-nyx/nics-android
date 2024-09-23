@@ -248,3 +248,9 @@ allprojects {
         maven { url "https://oss.jfrog.org/libs-snapshot" }
     }
 }
+
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name == "debug") {
+
+    }
+}

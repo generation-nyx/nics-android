@@ -31,6 +31,7 @@
 <resources>
     <string-array name="config_server_list">
         <item>nics.msb.gov.ba</item>
+        <item>stage-nics.msb.gov.ba</item>
         <item>demo.generationnyx.com</item>
     </string-array>
 

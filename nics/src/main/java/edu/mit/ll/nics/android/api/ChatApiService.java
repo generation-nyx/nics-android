@@ -46,7 +46,7 @@ import retrofit2.http.Query;
 public interface ChatApiService {
 
     @Headers({"Accept: application/json"})
-    @GET("chatmsgs/{collabroomId}?sortOrder=desc&dateColumn=created")
+    @GET("chatmsgs/{collabroomId}?sortOrder=desc&dateColumn=lastupdated")
     Call<ChatMessage> getChats(@Path(value = "collabroomId", encoded = true) long collabroomId,
                                @Query(value = "fromDate", encoded = true) long fromDate);
 

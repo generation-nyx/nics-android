@@ -84,6 +84,7 @@ import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.enums.EPSG.EPSG_3857;
 import static edu.mit.ll.nics.android.enums.EPSG.EPSG_4326;
+import static edu.mit.ll.nics.android.utils.CollectionUtils.getNonNullOrDefault;
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
 import static edu.mit.ll.nics.android.utils.constants.Geometry.GEOJSON_FEATURES;
 import static edu.mit.ll.nics.android.utils.constants.Geometry.GEOJSON_GEOMETRIES;
@@ -842,22 +843,25 @@ public class GeoUtils {
                 properties.put("graphic", iconFile.getAbsolutePath());
             }
         }
-        properties.put("fillcolor", style.getOrDefault("fillColor", "#FFFFFF"));
-        properties.put("fill", style.getOrDefault("fill", "1"));
-        String outline = style.getOrDefault("outline", "1");
+
+
+
+        properties.put("fillcolor", getNonNullOrDefault(style, "fillColor", "#FFFFFF"));
+        properties.put("fill", getNonNullOrDefault(style,"fill", "1"));
+        String outline = getNonNullOrDefault(style,"outline", "1");
         if ("0".equals(outline)) {
             properties.put("strokecolor", "#00000000");
         } else {
-            properties.put("strokecolor", style.getOrDefault("strokeColor", "#808080"));
+            properties.put("strokecolor", getNonNullOrDefault(style,"strokeColor", "#808080"));
         }
-        properties.put("strokewidth", style.getOrDefault("strokeWidth", "3"));
-        properties.put("dashstyle", style.getOrDefault("dashStyle", ""));
-        properties.put("opacity", style.getOrDefault("opacity", "0.4"));
-        properties.put("rotation", style.getOrDefault("rotation", "0"));
-        properties.put("labelcolor", style.getOrDefault("labelColor", "#000000"));
-        properties.put("labelsize", style.getOrDefault("labelSize", "30"));
-        properties.put("labeltext", style.getOrDefault("labelText", ""));
-        properties.put("filename", style.getOrDefault("filename", ""));
+        properties.put("strokewidth", getNonNullOrDefault(style,"strokeWidth", "3"));
+        properties.put("dashstyle", getNonNullOrDefault(style,"dashStyle", ""));
+        properties.put("opacity", getNonNullOrDefault(style,"opacity", "0.4"));
+        properties.put("rotation", getNonNullOrDefault(style,"rotation", "0"));
+        properties.put("labelcolor", getNonNullOrDefault(style,"labelColor", "#000000"));
+        properties.put("labelsize", getNonNullOrDefault(style,"labelSize", "30"));
+        properties.put("labeltext", getNonNullOrDefault(style,"labelText", ""));
+        properties.put("filename", getNonNullOrDefault(style,"filename", ""));
 
         feature.setProperties(properties);
     }
@@ -1208,7 +1212,7 @@ public class GeoUtils {
 
     public static LatLng getLatLngPoint(ArrayList<Vector2> coordinates) {
         LatLng latLng = null;
-        if (coordinates.size() > 0) {
+        if (!coordinates.isEmpty()) {
             Vector2 point = coordinates.get(0);
             latLng = new LatLng(point.x, point.y);
         }

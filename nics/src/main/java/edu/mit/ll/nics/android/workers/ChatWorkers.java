@@ -108,9 +108,15 @@ public class ChatWorkers {
                     public void onResponse(@NotNull Call<ChatMessage> call, @NotNull Response<ChatMessage> response) {
                         mPreferences.setLastSuccessfulServerCommsTimestamp(System.currentTimeMillis());
                         ChatMessage message = response.body();
-                        if (message != null && message.getChats() != null && !message.getChats().isEmpty()) {
-                            parseChatMessages(message);
-                            Timber.tag(DEBUG).i("Successfully received chat information for: %s - %s", incidentId, collabroomId);
+                        if (message != null) {
+                            if (message.getChats() != null && !message.getChats().isEmpty()) {
+                                parseChatMessages(message);
+                                Timber.tag(DEBUG).i("Successfully received chat information for: %s - %s", incidentId, collabroomId);
+                            }
+
+                            if (message.getDeleted() != null && !message.getDeleted().isEmpty()) {
+                                parseDeletedMessages(message);
+                            }
                         } else {
                             Timber.tag(DEBUG).w("Received empty chat information. Status Code: %s", response.code());
                         }
@@ -133,6 +139,37 @@ public class ChatWorkers {
                 return Result.success();
             });
         }
+
+        private void parseDeletedMessages(ChatMessage message) {
+            int numParsed = 0;
+
+            try {
+                Timber.tag("HELLO").w(message.toJson());
+            } catch (Exception e){
+            }
+
+            // Set the local chats to deleted if they have been deleted recently.
+            for (Chat deletedChat : message.getDeleted()) {
+                long deletedChatId = deletedChat.getChatId();
+                Timber.tag("HELLO").w("Deleted chat ID: %s", deletedChatId);
+
+                Chat localChat = mRepository.getChatByChatId(deletedChatId);
+                
+                if (localChat != null) {
+                    Timber.tag(DEBUG).d("Local chat deleted: %s", localChat.getMessage());
+                    localChat.setIsDeleted(true);
+                    localChat.setLastUpdated(deletedChat.getLastUpdated());
+                    mRepository.deleteChat(localChat);
+                }
+                numParsed++;
+            }
+
+            if (numParsed > 0) {
+                mPersonalHistory.addPersonalHistory("Successfully soft deleted " + numParsed + " chat messages from " + mPreferences.getSelectedCollabroom().getName(),
+                        mPreferences.getUserId(), mPreferences.getUserNickName());
+            }
+        }
+
 
         private void parseChatMessages(ChatMessage message) {
             int numParsed = 0;

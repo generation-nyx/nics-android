@@ -49,8 +49,11 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("SELECT * FROM chatTable WHERE id=:id")
     Chat getChatById(long id);
 
+    @Query("SELECT * FROM chatTable WHERE chatId = :chatId")
+    Chat getChatByChatId(long chatId);
+
     @Query("DELETE FROM chatTable WHERE chatId = :chatId")
-    void deleteChatById(long chatId);
+    void deleteChatByChatId(long chatId);
 
     @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId ORDER BY :orderBy")
     PagingSource<Integer, Chat> getChats(long collabroomId, String orderBy);
@@ -73,36 +76,36 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("DELETE FROM chatTable")
     int deleteAllChat();
 
-    @Query("SELECT created FROM chatTable WHERE collabroomId=:collabroomId AND sendStatus=:status ORDER BY created DESC LIMIT 1")
+    @Query("SELECT lastUpdated FROM chatTable WHERE collabroomId=:collabroomId AND sendStatus=:status ORDER BY lastUpdated DESC LIMIT 1")
     long getLastChatTimestamp(long collabroomId, int status);
 
-    @Query("SELECT created FROM chatTable WHERE collabroomId=:collabroomId ORDER BY created ASC LIMIT 1")
+    @Query("SELECT lastUpdated FROM chatTable WHERE collabroomId=:collabroomId ORDER BY lastUpdated ASC LIMIT 1")
     long getOldestChatTimestamp(long collabroomId);
 
-    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND sendStatus=:status ORDER BY created ASC")
+    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND sendStatus=:status ORDER BY lastUpdated ASC")
     List<Chat> getDataForCollaborationRoom(long collabroomId, int status);
 
-    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created<:timestamp AND sendStatus IN (:status) ORDER BY created DESC LIMIT :limit")
+    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated<:timestamp AND sendStatus IN (:status) ORDER BY lastUpdated DESC LIMIT :limit")
     List<Chat> getDataForCollaborationRoomStartingFromAndGoingBack(long collabroomId, long timestamp, int limit, int[] status);
 
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created<:startTimestamp AND created>=:endTimestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY created DESC LIMIT :limit")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated<:startTimestamp AND lastUpdated>=:endTimestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY lastUpdated DESC LIMIT :limit")
 //    List<Chat> getDataForFilteredCollaborationRoomStartingFromAndGoingBack(long collabroomId, long startTimestamp, long endTimestamp, ArrayList<String> usersToFilter, int limit, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created<:startTimestamp AND created>=:endTimestamp AND sendStatus IN (:status) ORDER BY created DESC LIMIT :limit")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated<:startTimestamp AND lastUpdated>=:endTimestamp AND sendStatus IN (:status) ORDER BY lastUpdated DESC LIMIT :limit")
 //    List<Chat> getDataForTimeFilteredCollaborationRoomStartingFromAndGoingBack(long collabroomId, long startTimestamp, long endTimestamp, int limit, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created<:timestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY created DESC LIMIT :limit")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated<:timestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY lastUpdated DESC LIMIT :limit")
 //    List<Chat> getDataForUserFilteredCollaborationRoomStartingFromAndGoingBack(long collabroomId, long timestamp, ArrayList<String> usersToFilter, int limit, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created>:timestamp AND sendStatus IN (:status) ORDER BY created DESC")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated>:timestamp AND sendStatus IN (:status) ORDER BY lastUpdated DESC")
 //    List<Chat> getNewChatMessagesFromDate(long collabroomId, long timestamp, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created>:newestTimestamp AND created<=:startTimestamp AND created>:endTimestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY created DESC")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated>:newestTimestamp AND lastUpdated<=:startTimestamp AND lastUpdated>:endTimestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY lastUpdated DESC")
 //    List<Chat> getFilteredNewChatMessagesFromDate(long collabroomId, long newestTimestamp, long startTimestamp, long endTimestamp, ArrayList<String> usersToFilter, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created>:newestTimestamp AND created<=:startTimestamp AND created>:endTimestamp AND sendStatus IN (:status) ORDER BY created DESC")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated>:newestTimestamp AND lastUpdated<=:startTimestamp AND lastUpdated>:endTimestamp AND sendStatus IN (:status) ORDER BY lastUpdated DESC")
 //    List<Chat> getTimeFilteredNewChatMessagesFromDate(long collabroomId, long newestTimestamp, long startTimestamp, long endTimestamp, int[] status);
 //
-//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND created>:timestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY created DESC")
+//    @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId AND lastUpdated>:timestamp AND nickName IN (:usersToFilter) AND sendStatus IN (:status) ORDER BY lastUpdated DESC")
 //    List<Chat> getUserFilteredNewChatMessagesFromDate(long collabroomId, long timestamp, ArrayList<String> usersToFilter, int[] status);
 }

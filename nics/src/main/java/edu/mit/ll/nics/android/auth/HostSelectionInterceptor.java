@@ -39,6 +39,7 @@ import javax.inject.Singleton;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import timber.log.Timber;
 
 @Singleton
 public class HostSelectionInterceptor implements Interceptor {
@@ -64,6 +65,7 @@ public class HostSelectionInterceptor implements Interceptor {
 
             String url = host + requestUrl.url().getFile();
 
+//            Timber.tag("HOSTNET").w("New URL: %s", url);
             request = request.newBuilder().url(url).build();
         }
         return chain.proceed(request);
