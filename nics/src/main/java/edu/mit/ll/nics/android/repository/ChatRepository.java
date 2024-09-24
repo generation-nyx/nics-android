@@ -123,6 +123,10 @@ public class ChatRepository {
         return mDao.getAllChats("lastUpdated ASC", SendStatus.WAITING_TO_SEND.getId());
     }
 
+    public List<Chat> getChatToDelete() {
+        return mDao.getAllChats("lastUpdated ASC", SendStatus.DELETING.getId());
+    }
+
     public Chat getChatById(long id) {
         return mDao.getChatById(id);
     }

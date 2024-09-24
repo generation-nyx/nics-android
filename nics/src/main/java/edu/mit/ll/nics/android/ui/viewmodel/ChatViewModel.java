@@ -172,8 +172,9 @@ public class ChatViewModel extends ViewModel {
             }
         }
     }
+
     public void softDeleteChat(Chat chat) {
-        Timber.tag("ChatWorkers").d("Starting ChatWorkers.Get startWork() method.");
+        Timber.tag("ChatWorkers").d("Starting ChatWorkers.Delete startWork() method.");
         long collabroomId = chat.getCollabroomId();
         long chatMsgId = chat.getChatId();
         long userOrgId = mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId();

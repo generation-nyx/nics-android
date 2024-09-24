@@ -83,6 +83,7 @@ import timber.log.Timber;
 import static edu.mit.ll.nics.android.utils.Utils.isCollabroomSelected;
 import static edu.mit.ll.nics.android.utils.Utils.isIncidentSelected;
 import static edu.mit.ll.nics.android.utils.constants.NICS.DEBUG;
+import static edu.mit.ll.nics.android.workers.Workers.DELETE_CHAT_MESSAGES_WORKER;
 import static edu.mit.ll.nics.android.workers.Workers.DELETE_MARKUP_FEATURES_WORKER;
 import static edu.mit.ll.nics.android.workers.Workers.DELETE_MOBILE_DEVICE_TRACKS_WORKER;
 import static edu.mit.ll.nics.android.workers.Workers.DOWNLOAD_IMAGE_WORKER;
@@ -470,7 +471,8 @@ public class NetworkRepository {
 
         List<Chat> chats = mChatRepository.getChatToSend();
 
-        if (chats.size() > 0) {
+
+        if (!chats.isEmpty()) {
             Timber.tag(DEBUG).d("Preparing to send %s chats.", chats.size());
         }
 
@@ -483,6 +485,16 @@ public class NetworkRepository {
         String worker = POST_CHAT_MESSAGES_WORKER + id;
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(ChatWorkers.Post.class)
                 .addTag(POST_CHAT_MESSAGES_WORKER)
+                .addTag(String.valueOf(id))
+                .setInputData(new Data.Builder().putLong("id", id).build())
+                .build();
+        mWorkManager.enqueueUniqueWork(worker, ExistingWorkPolicy.KEEP, request);
+    }
+
+    public void deleteChatMessage(long id) {
+        String worker = DELETE_CHAT_MESSAGES_WORKER + id;
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(ChatWorkers.Delete.class)
+                .addTag(DELETE_CHAT_MESSAGES_WORKER)
                 .addTag(String.valueOf(id))
                 .setInputData(new Data.Builder().putLong("id", id).build())
                 .build();
@@ -611,7 +623,7 @@ public class NetworkRepository {
 
         List<MarkupFeature> features = mMapRepository.getAllMarkupReadyToDelete(mPreferences.getUserName());
 
-        if (features.size() > 0) {
+        if (!features.isEmpty()) {
             Timber.tag(DEBUG).d("Preparing to delete %s markup features.", features.size());
         }
 

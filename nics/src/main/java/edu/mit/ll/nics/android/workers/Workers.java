@@ -39,6 +39,7 @@ public class Workers {
     public static final String POST_EOD_REPORTS_WORKER = "POST_EOD_REPORTS_WORKER";
     public static final String GET_CHAT_MESSAGES_WORKER = "GET_CHAT_HISTORY_WORKER";
     public static final String POST_CHAT_MESSAGES_WORKER = "POST_CHAT_HISTORY_WORKER";
+    public static final String DELETE_CHAT_MESSAGES_WORKER = "DELETE_CHAT_HISTORY_WORKER";
     public static final String POST_CHAT_PRESENCE_WORKER = "POST_CHAT_PRESENCE_WORKER";
     public static final String GET_COLLABROOM_LAYERS_WORKER = "GET_COLLABROOM_LAYERS_WORKER";
     public static final String GET_MARKUP_FEATURES_WORKER = "GET_MARKUP_FEATURES_WORKER";
