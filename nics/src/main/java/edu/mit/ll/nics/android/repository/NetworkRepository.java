@@ -366,7 +366,7 @@ public class NetworkRepository {
 
         List<GeneralMessage> generalMessages = mGeneralMessageRepository.getGeneralMessagesReadyToSend(mPreferences.getUserName());
 
-        if (generalMessages.size() > 0) {
+        if (!generalMessages.isEmpty()) {
             Timber.tag(DEBUG).d("Preparing to send %s general messages.", generalMessages.size());
         }
 
@@ -419,7 +419,7 @@ public class NetworkRepository {
 
         List<EODReport> eodReports = mEODReportRepository.getEODReportsReadyToSend(mPreferences.getUserName());
 
-        if (eodReports.size() > 0) {
+        if (!eodReports.isEmpty()) {
             Timber.tag(DEBUG).d("Preparing to send %s eod reports.", eodReports.size());
         }
 
@@ -491,7 +491,23 @@ public class NetworkRepository {
         mWorkManager.enqueueUniqueWork(worker, ExistingWorkPolicy.KEEP, request);
     }
 
-    public void deleteChatMessage(long id) {
+    public void deleteChats() {
+        if (!mAuthRepository.isLoggedIn()) {
+            return;
+        }
+
+        List<Chat> chats = mChatRepository.getAllChatReadyToDelete(mPreferences.getUserName());
+
+        if (!chats.isEmpty()) {
+            Timber.tag(DEBUG).d("Preparing to delete %s chats.", chats.size());
+        }
+
+        for (Chat chat : chats) {
+            deleteChat(chat.getId());
+        }
+    }
+
+    public void deleteChat(long id) {
         String worker = DELETE_CHAT_MESSAGES_WORKER + id;
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(ChatWorkers.Delete.class)
                 .addTag(DELETE_CHAT_MESSAGES_WORKER)
@@ -818,13 +834,19 @@ public class NetworkRepository {
      * Send all pending local content to the server.
      */
     public void sendAllLocalContent() {
-        postChatMessages();
-        postChatPresence(PresenceStatus.ACTIVE);
+        refreshChatContent();
         postGeneralMessages();
         postEODReports();
         deleteMarkupFeatures();
         postMarkupFeatures();
         updateMarkupFeatures();
+    }
+
+    public void refreshChatContent() {
+        postChatMessages();
+        deleteChats();
+        postChatPresence(PresenceStatus.ACTIVE);
+        getChatMessages();
     }
 
     public void refreshMapContent() {
@@ -840,11 +862,9 @@ public class NetworkRepository {
     public void refreshCollabroom() {
         if (isCollabroomSelected(mPreferences.getSelectedCollabroom())) {
             refreshMapContent();
-            postChatMessages();
-            postChatPresence(PresenceStatus.ACTIVE);
+            refreshChatContent();
             postGeneralMessages();
             postEODReports();
-            getChatMessages();
             getGeneralMessages();
             getEODReports();
         }

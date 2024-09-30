@@ -389,6 +389,7 @@
     <string name="examples">Ejemplos:</string>
     <string name="featureAddedBack">Característica agregada de nuevo al mapa.</string>
     <string name="featureDeleted">Característica eliminada del mapa.</string>
+    <string name="chatDeleted">Chat deleted.</string>
     <string name="february">febrero</string>
     <string name="filter">Filter</string>
     <string name="filterByDate">Filtrar por fecha</string>

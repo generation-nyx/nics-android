@@ -129,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <com.tsuryo.swipeablerv.SwipeableRecyclerView
                         android:id="@+id/chatMessages"
                         visible="@{!(viewModel.loading &amp;&amp; adapter.itemCount == 0)}"
                         android:layout_width="match_parent"

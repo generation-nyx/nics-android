@@ -42,14 +42,13 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -67,7 +66,6 @@ import edu.mit.ll.nics.android.interfaces.ChatClickCallback;
 import edu.mit.ll.nics.android.repository.ChatRepository;
 import edu.mit.ll.nics.android.ui.adapters.ChatAdapter;
 import edu.mit.ll.nics.android.ui.viewmodel.ChatViewModel;
-import edu.mit.ll.nics.android.workers.ChatWorkers;
 import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
@@ -79,6 +77,7 @@ import static edu.mit.ll.nics.android.workers.Workers.GET_CHAT_MESSAGES_WORKER;
 @AndroidEntryPoint
 public class ChatFragment extends AppFragment {
 
+    private ChatAdapter mAdapter;
     private ChatViewModel mViewModel;
     private FragmentChatBinding mBinding;
 
@@ -98,7 +97,6 @@ public class ChatFragment extends AppFragment {
 
     /**
      * Bind to the layout for this fragment.
-     *
      * The layout resource file for this fragment is located at
      * nics/src/main/res/layout/fragment_chat.xml.
      */
@@ -123,8 +121,8 @@ public class ChatFragment extends AppFragment {
         mBinding.setFragment(this);
 
         // Initialize and bind the paged list adapter to the xml layout.
-        ChatAdapter adapter = new ChatAdapter(mClickCallback, mViewModel, mLifecycleOwner, mPreferences);
-        mBinding.setAdapter(adapter);
+        mAdapter = new ChatAdapter(mClickCallback, mViewModel, mLifecycleOwner, mPreferences);
+        mBinding.setAdapter(mAdapter);
         mBinding.executePendingBindings();
 
         mBinding.swipeRefresh.setOnRefreshListener(() -> {
@@ -132,7 +130,19 @@ public class ChatFragment extends AppFragment {
             mBinding.swipeRefresh.setRefreshing(false);
         });
 
-        subscribeToModel(adapter);
+        mBinding.chatMessages.setListener(new SwipeLeftRightCallback.Listener() {
+            @Override
+            public void onSwipedLeft(int position) {
+
+            }
+
+            @Override
+            public void onSwipedRight(int position) {
+                showDeleteDialog(mAdapter.snapshot().get(position));
+            }
+        });
+
+        subscribeToModel(mAdapter);
     }
 
     /**
@@ -178,13 +188,14 @@ public class ChatFragment extends AppFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.details) {
-
+            // TODO
         } else if (id == R.id.search) {
             // Toggle showing the search bar.
             mViewModel.toggleSearching();
         } else if (id == R.id.filter) {
             showDateRangePicker();
         } else if (id == R.id.reverse) {
+            // TODO
             // Show a popup menu with different sorting options.
 //            showOrderOptions();
         } else if (id == R.id.refresh) {
@@ -194,13 +205,20 @@ public class ChatFragment extends AppFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private final ChatClickCallback mClickCallback = chat -> {
+    private final ChatClickCallback mClickCallback = new ChatClickCallback() {
+        @Override
+        public void onClick(Chat chat) {
 
+        }
+
+        @Override
+        public void onDeleteClick(Chat chat) {
+            showDeleteDialog(chat);
+        }
     };
 
     private void refresh() {
-        mNetworkRepository.getChatMessages();
-        mNetworkRepository.postChatMessages();
+        mNetworkRepository.refreshChatContent();
     }
 
     private void showDateRangePicker() {
@@ -255,32 +273,55 @@ public class ChatFragment extends AppFragment {
         }
     }
 
-    public void deleteChat() {
-        try {
-            String message = mViewModel.getChatMessage().getValue().trim();
+    private void showDeleteDialog(Chat chat) {
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(getString(R.string.deleteThisChat).concat("?"))
+                .setIcon(R.drawable.nics_logo)
+                .setMessage(getString(R.string.deleteConfirmation).concat("?"))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> deleteChat(chat))
+                .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .setOnDismissListener(dialog -> {
+                    mAdapter.refresh();
+//                    int position = mAdapter.snapshot().getItems()..getItem(feature);
+//                    if (position >= 0) {
+//                        mAdapter.notifyItemChanged(position);
+//                    }
+                })
+                .create()
+                .show();
+    }
 
-            if (!message.isEmpty()) {
-                Chat chat = new Chat();
-                long currentTime = System.currentTimeMillis();
-                chat.setMessage(message);
-                chat.setCreated(currentTime);
-                chat.setLastUpdated(currentTime);
-                chat.setUserOrgId(mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId());
-                chat.setIncidentId(mPreferences.getSelectedIncidentId());
-                chat.setUserOrganization(mPreferences.getSelectedOrganization().getUserOrgs().get(0));
-                chat.setCollabroomId(mPreferences.getSelectedCollabroomId());
-                chat.setSeqNum(currentTime);
-                chat.setChatId(currentTime);
-                chat.setSendStatus(SendStatus.WAITING_TO_SEND);
+    public void deleteChat(Chat chat) {
+        // Save a copy of the chat
+        Chat cachedChat = mRepository.getChatByChatId(chat.getId());
 
-                mRepository.addChatToDatabase(chat, result -> mMainHandler.post(() -> mNetworkRepository.postChatMessages()));
+        // Remove the chat from the local db, so that it removes it from the chat list.
+        mRepository.deleteChatFromDatabase(chat.getChatId());
 
-                mViewModel.setChatMessage(EMPTY);
-            } else {
-                Snackbar.make(requireView(), "No chat message to send.", Snackbar.LENGTH_SHORT).show();
+        // Show a snackbar to give the user 4 seconds to undo the deletion.
+        Snackbar snackbar = Snackbar.make(mBinding.getRoot(), getString(R.string.chatDeleted), Snackbar.LENGTH_INDEFINITE);
+        snackbar.setDuration(4000);
+
+        // If user clicks the UNDO button, add feature back to database.
+        snackbar.setAction(getString(R.string.undo), view -> mRepository.addChatToDatabase(cachedChat));
+        snackbar.show();
+
+        // If the snackbar closes for any reason other than the undo button,
+        // add the feature back to the database, except with the delete flag.
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != DISMISS_EVENT_ACTION) {
+                    cachedChat.setSendStatus(SendStatus.DELETE);
+
+                    cachedChat.setUserName(mPreferences.getUserName());
+
+                    mRepository.addChatToDatabase(cachedChat, result -> mMainHandler.post(() -> {
+                        mNetworkRepository.deleteChats();
+                    }));
+                }
             }
-        } catch (Exception e) {
-            Timber.tag(DEBUG).e(e, "Failed to send the chat message.");
-        }
+        });
     }
 }

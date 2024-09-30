@@ -395,6 +395,7 @@
     <string name="examples">Examples:</string>
     <string name="featureAddedBack">Feature added back to map.</string>
     <string name="featureDeleted">Feature deleted from map.</string>
+    <string name="chatDeleted">Chat deleted.</string>
     <string name="february">February</string>
     <string name="filter">Filter</string>
     <string name="filterByDate">Filter By Date</string>

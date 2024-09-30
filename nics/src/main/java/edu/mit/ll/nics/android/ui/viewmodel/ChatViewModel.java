@@ -50,7 +50,9 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import edu.mit.ll.nics.android.database.entities.Chat;
 import edu.mit.ll.nics.android.di.Qualifiers.PagedListConfig;
+import edu.mit.ll.nics.android.enums.SendStatus;
 import edu.mit.ll.nics.android.repository.ChatRepository;
+import edu.mit.ll.nics.android.repository.ConfigRepository;
 import edu.mit.ll.nics.android.repository.PreferencesRepository;
 import edu.mit.ll.nics.android.utils.livedata.NonNullMutableLiveData;
 import edu.mit.ll.nics.android.workers.ChatWorkers;
@@ -59,6 +61,9 @@ import timber.log.Timber;
 
 import static edu.mit.ll.nics.android.utils.CollectionUtils.getNonNullOrDefault;
 import static edu.mit.ll.nics.android.utils.StringUtils.EMPTY;
+import static edu.mit.ll.nics.android.utils.constants.NICS.DEBUG;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,22 +84,24 @@ public class ChatViewModel extends ViewModel {
     private final MediatorLiveData<PagingData<Chat>> mChat = new MediatorLiveData<>();
     private final PreferencesRepository mPreferences;
     private final Map<Long, Boolean> deleteButtonVisibilityMap = new HashMap<>();
+    private final ChatRepository mRepository;
 
     @Inject
     public ChatViewModel(@PagedListConfig PagingConfig pagingConfig,
                          PreferencesRepository preferences,
                          ChatRepository repository) {
+        mRepository = repository;
         long incidentId = preferences.getSelectedIncidentId();
         long collabroomId = preferences.getSelectedCollabroomId();
 
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
 
-        mStartDate = new NonNullMutableLiveData<>(repository.getOldestChatTimestamp(collabroomId));
+        mStartDate = new NonNullMutableLiveData<>(mRepository.getOldestChatTimestamp(collabroomId));
         mEndDate = new NonNullMutableLiveData<>(DateTime.now(DateTimeZone.UTC).getMillis());
         mPreferences = preferences;
 
 
-        Pager<Integer, Chat> pager = new Pager<>(pagingConfig, () -> repository.getChats(incidentId, collabroomId));
+        Pager<Integer, Chat> pager = new Pager<>(pagingConfig, () -> mRepository.getChats(incidentId, collabroomId));
         mChat.addSource(PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope), mChat::postValue);
     }
     public LiveData<PagingData<Chat>> getChat() {
@@ -171,26 +178,5 @@ public class ChatViewModel extends ViewModel {
                 deleteButtonVisibilityMap.put(chatId, !currentVisibility);
             }
         }
-    }
-
-    public void softDeleteChat(Chat chat) {
-        Timber.tag("ChatWorkers").d("Starting ChatWorkers.Delete startWork() method.");
-        long collabroomId = chat.getCollabroomId();
-        long chatMsgId = chat.getChatId();
-        long userOrgId = mPreferences.getSelectedOrganization().getUserOrgs().get(0).getUserOrgId();
-        long incidentId = mPreferences.getSelectedIncidentId();
-        String username = mPreferences.getUserName();
-        Data inputData = new Data.Builder()
-                .putLong("collabroomId", collabroomId)
-                .putLong("chatMsgId", chatMsgId)
-                .putLong("userOrgId", userOrgId)
-                .putLong("incidentId", incidentId)
-                .putString("username", username)
-                .build();
-        OneTimeWorkRequest deleteWorkRequest = new OneTimeWorkRequest.Builder(ChatWorkers.Delete.class)
-                .setInputData(inputData)
-                .build();
-        WorkManager.getInstance().enqueue(deleteWorkRequest);
-        WorkManager.getInstance().getWorkInfoByIdLiveData(deleteWorkRequest.getId());
     }
 }

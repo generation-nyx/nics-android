@@ -154,7 +154,7 @@ public class ChatWorkers {
                 Timber.tag("HELLO").w("Deleted chat ID: %s", deletedChatId);
 
                 Chat localChat = mRepository.getChatByChatId(deletedChatId);
-                
+
                 if (localChat != null) {
                     Timber.tag(DEBUG).d("Local chat deleted: %s", localChat.getMessage());
                     localChat.setIsDeleted(true);
@@ -291,7 +291,7 @@ public class ChatWorkers {
                 String userName = mPreferences.getUserName();
                 long userOrgId = mPreferences.getUserOrgId();
 
-                chat.setSendStatus(SendStatus.DELETING);
+                chat.setSendStatus(SendStatus.DELETE);
                 mRepository.addChatToDatabase(chat);
 
                 Timber.tag(DEBUG).i("Adding chat " + id + " to delete queue.");

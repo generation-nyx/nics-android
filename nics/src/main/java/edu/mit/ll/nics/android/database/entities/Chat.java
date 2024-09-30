@@ -84,6 +84,10 @@ public class Chat {
     @SerializedName("lastupdated")
     private long lastUpdated;
 
+    @Expose
+    @SerializedName("username")
+    private String userName;
+
     @Embedded(prefix = "userOrg_")
     @SerializedName("userorg")
     private UserOrg userOrganization;
@@ -233,6 +237,14 @@ public class Chat {
 
     public void setRead(boolean hasRead) {
         this.hasRead = hasRead;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String toJson() {

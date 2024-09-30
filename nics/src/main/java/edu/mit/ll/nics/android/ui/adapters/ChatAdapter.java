@@ -66,6 +66,7 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
         mPreferences = preferences;
         mLifecycleOwner = lifecycleOwner;
         mViewModel = viewModel;
+        setHasStableIds(true);
     }
 
     @Override
@@ -129,7 +130,7 @@ public class ChatAdapter extends PagingDataAdapter<Chat, ChatAdapter.ChatViewHol
 
                 binding.deleteButton.setOnClickListener(v -> {
                     viewModel.toggleDeleteButtonVisibility(chat);
-                    viewModel.softDeleteChat(chat);
+//                    viewModel.softDeleteChat(chat);
                 });
             }
         }

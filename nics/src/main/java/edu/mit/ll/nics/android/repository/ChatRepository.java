@@ -35,6 +35,7 @@ import androidx.paging.PagingSource;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -44,6 +45,9 @@ import javax.inject.Singleton;
 import edu.mit.ll.nics.android.database.AppDatabase;
 import edu.mit.ll.nics.android.database.dao.ChatDao;
 import edu.mit.ll.nics.android.database.entities.Chat;
+import edu.mit.ll.nics.android.database.entities.Feature;
+import edu.mit.ll.nics.android.database.entities.Hazard;
+import edu.mit.ll.nics.android.database.entities.MarkupFeature;
 import edu.mit.ll.nics.android.di.Qualifiers.DiskExecutor;
 import edu.mit.ll.nics.android.enums.SendStatus;
 import edu.mit.ll.nics.android.workers.SimpleThreadCallback;
@@ -107,6 +111,13 @@ public class ChatRepository {
         addChatToDatabase(chat);
     }
 
+    public void deleteChat(Chat chat, SimpleThreadCallback callback) {
+        mExecutor.execute(() -> {
+            deleteChat(chat);
+            callback.onComplete(new SimpleThreadResult.Success());
+        });
+    }
+
     public void addChatToDatabase(Chat chat, SimpleThreadCallback callback) {
         mExecutor.execute(() -> {
             mDao.replace(chat);
@@ -124,7 +135,7 @@ public class ChatRepository {
     }
 
     public List<Chat> getChatToDelete() {
-        return mDao.getAllChats("lastUpdated ASC", SendStatus.DELETING.getId());
+        return mDao.getAllChats("lastUpdated ASC", SendStatus.DELETE.getId());
     }
 
     public Chat getChatById(long id) {
@@ -150,6 +161,10 @@ public class ChatRepository {
         mExecutor.execute(() -> {
             mDao.deleteChatByChatId(chatId);
         });
+    }
+
+    public ArrayList<Chat> getAllChatReadyToDelete(String username) {
+        return new ArrayList<>(mDao.getAllDataForUser(username, SendStatus.DELETE.getId()));
     }
 
     /**

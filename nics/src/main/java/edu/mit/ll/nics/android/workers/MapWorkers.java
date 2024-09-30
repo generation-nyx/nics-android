@@ -354,7 +354,7 @@ public class MapWorkers {
                 String featureId = feature.getFeatureId();
 
                 feature.setUserSessionId(mPreferences.getUserSessionId());
-                feature.setSendStatus(SendStatus.DELETING);
+                feature.setSendStatus(SendStatus.DELETE);
                 mRepository.addMarkupToDatabase(feature);
 
                 Timber.tag(DEBUG).i("Adding markup feature " + id + " to delete queue.");
@@ -433,7 +433,7 @@ public class MapWorkers {
                 MarkupFeature feature = mRepository.getMarkupFeatureById(id);
 
                 feature.setUserSessionId(mPreferences.getUserSessionId());
-                feature.setSendStatus(SendStatus.UPDATING);
+                feature.setSendStatus(SendStatus.UPDATE);
                 mRepository.addMarkupToDatabase(feature);
 
                 Timber.tag(DEBUG).i("Adding markup feature " + id + " to update queue.");

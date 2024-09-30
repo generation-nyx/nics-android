@@ -33,4 +33,6 @@ import edu.mit.ll.nics.android.database.entities.Chat;
 
 public interface ChatClickCallback {
     void onClick(Chat chat);
+
+    void onDeleteClick(Chat chat);
 }

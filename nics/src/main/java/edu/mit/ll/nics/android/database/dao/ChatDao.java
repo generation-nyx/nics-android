@@ -34,11 +34,13 @@ import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.RawQuery;
+import androidx.room.Transaction;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import java.util.List;
 
 import edu.mit.ll.nics.android.database.entities.Chat;
+import edu.mit.ll.nics.android.database.entities.Feature;
 
 @Dao
 public interface ChatDao extends BaseDao<Chat> {
@@ -54,6 +56,12 @@ public interface ChatDao extends BaseDao<Chat> {
 
     @Query("DELETE FROM chatTable WHERE chatId = :chatId")
     void deleteChatByChatId(long chatId);
+
+    @Query("SELECT * FROM chatTable WHERE userName=:username AND sendStatus=:status ORDER BY lastUpdated DESC")
+    List<Chat> getAllDataForUser(String username, int status);
+
+    @Query("SELECT * FROM chatTable WHERE userName=:username AND sendStatus=:status ORDER BY :orderBy")
+    List<Chat> getAllDataForUser(String username, String orderBy, int status);
 
     @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId ORDER BY :orderBy")
     PagingSource<Integer, Chat> getChats(long collabroomId, String orderBy);
