@@ -23,7 +23,7 @@ android {
         applicationId "edu.mit.ll.nics.android"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 708000000
+        versionCode 708000001
         versionName "7.0.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -249,8 +249,33 @@ allprojects {
     }
 }
 
-android.applicationVariants.all { variant ->
-    if (variant.buildType.name == "debug") {
+task copyApk(type: Copy) {
+    doLast {
+        def timestamp = System.currentTimeMillis()
+        def apkFiles = fileTree(dir: "${buildDir}/outputs/apk", includes: ["**/*.apk"])
 
+        if (!apkFiles.isEmpty()) {
+            apkFiles.each { File apkFile ->
+                def apkDir = apkFile.parentFile
+                def newFileName = "${apkFile.nameWithoutExtension}-${timestamp}.apk"
+                def newFile = new File(apkDir, newFileName)
+                copy {
+                    from apkFile
+                    into apkDir
+                    rename { fileName ->
+                        newFileName
+                    }
+                }
+                println "Copied APK: ${apkFile.name} to ${newFile.name}"
+            }
+        } else {
+            println "No APK files found."
+        }
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name.startsWith("assemble")) {
+        task.finalizedBy(copyApk)
     }
 }

@@ -213,6 +213,7 @@ public class ChatFragment extends AppFragment {
 
         @Override
         public void onDeleteClick(Chat chat) {
+            Timber.tag(DEBUG).d("Delete chat clicked for %s", chat.getChatId());
             showDeleteDialog(chat);
         }
     };
@@ -277,7 +278,7 @@ public class ChatFragment extends AppFragment {
         new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(getString(R.string.deleteThisChat).concat("?"))
                 .setIcon(R.drawable.nics_logo)
-                .setMessage(getString(R.string.deleteConfirmation).concat("?"))
+                .setMessage(getString(R.string.deleteConfirmation).concat("?").concat("\n").concat("'").concat(chat.getMessage()).concat("'"))
                 .setPositiveButton(getString(R.string.yes), (dialog, which) -> deleteChat(chat))
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .setCancelable(true)
@@ -293,17 +294,24 @@ public class ChatFragment extends AppFragment {
     }
 
     public void deleteChat(Chat chat) {
+//        if (chat.getUserName() != mPreferences.getUserName()) {
+//            return;
+//        }
+        chat.setLastUpdated(System.currentTimeMillis());
+
         // Save a copy of the chat
-        Chat cachedChat = mRepository.getChatByChatId(chat.getId());
+        Chat cachedChat = mRepository.getChatByChatId(chat.getChatId());
+        Timber.tag(DEBUG).d("Cached chat: %s", chat.getChatId());
 
         // Remove the chat from the local db, so that it removes it from the chat list.
-        mRepository.deleteChatFromDatabase(chat.getChatId());
+        mRepository.deleteChat(chat);
+        Timber.tag(DEBUG).d("Removed local chat: %s", chat.getChatId());
 
         // Show a snackbar to give the user 4 seconds to undo the deletion.
         Snackbar snackbar = Snackbar.make(mBinding.getRoot(), getString(R.string.chatDeleted), Snackbar.LENGTH_INDEFINITE);
         snackbar.setDuration(4000);
 
-        // If user clicks the UNDO button, add feature back to database.
+        // If user clicks the UNDO button, add chat back to database.
         snackbar.setAction(getString(R.string.undo), view -> mRepository.addChatToDatabase(cachedChat));
         snackbar.show();
 
@@ -315,7 +323,7 @@ public class ChatFragment extends AppFragment {
                 if (event != DISMISS_EVENT_ACTION) {
                     cachedChat.setSendStatus(SendStatus.DELETE);
 
-                    cachedChat.setUserName(mPreferences.getUserName());
+//                    cachedChat.setUserName(mPreferences.getUserName());
 
                     mRepository.addChatToDatabase(cachedChat, result -> mMainHandler.post(() -> {
                         mNetworkRepository.deleteChats();

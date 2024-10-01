@@ -108,6 +108,7 @@ public class ChatRepository {
 
     public void deleteChat(Chat chat) {
         chat.setIsDeleted(true);
+        chat.setSendStatus(SendStatus.DELETE);
         addChatToDatabase(chat);
     }
 

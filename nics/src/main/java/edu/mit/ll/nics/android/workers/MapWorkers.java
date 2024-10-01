@@ -355,6 +355,7 @@ public class MapWorkers {
 
                 feature.setUserSessionId(mPreferences.getUserSessionId());
                 feature.setSendStatus(SendStatus.DELETE);
+//                feature.setSendStatus(SendStatus.DELETING); TODO I Think this should be just 'DELETE'
                 mRepository.addMarkupToDatabase(feature);
 
                 Timber.tag(DEBUG).i("Adding markup feature " + id + " to delete queue.");

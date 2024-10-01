@@ -143,21 +143,20 @@ public class ChatWorkers {
         private void parseDeletedMessages(ChatMessage message) {
             int numParsed = 0;
 
-            try {
-                Timber.tag("HELLO").w(message.toJson());
-            } catch (Exception e){
-            }
+//            try {
+//                Timber.tag("HELLO").w(message.toJson());
+//            } catch (Exception e){
+//            }
 
             // Set the local chats to deleted if they have been deleted recently.
             for (Chat deletedChat : message.getDeleted()) {
                 long deletedChatId = deletedChat.getChatId();
-                Timber.tag("HELLO").w("Deleted chat ID: %s", deletedChatId);
+                Timber.tag(DEBUG).w("Deleted chat ID: %s", deletedChatId);
 
                 Chat localChat = mRepository.getChatByChatId(deletedChatId);
 
                 if (localChat != null) {
                     Timber.tag(DEBUG).d("Local chat deleted: %s", localChat.getMessage());
-                    localChat.setIsDeleted(true);
                     localChat.setLastUpdated(deletedChat.getLastUpdated());
                     mRepository.deleteChat(localChat);
                 }
