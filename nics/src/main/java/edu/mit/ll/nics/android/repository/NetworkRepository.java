@@ -500,6 +500,8 @@ public class NetworkRepository {
 
         if (!chats.isEmpty()) {
             Timber.tag(DEBUG).d("Preparing to delete %s chats.", chats.size());
+        } else {
+            Timber.tag(DEBUG).d("No chats to delete yet.");
         }
 
         for (Chat chat : chats) {

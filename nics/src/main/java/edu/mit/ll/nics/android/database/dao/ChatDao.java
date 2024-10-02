@@ -57,10 +57,10 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("DELETE FROM chatTable WHERE chatId = :chatId")
     void deleteChatByChatId(long chatId);
 
-    @Query("SELECT * FROM chatTable WHERE userName=:username AND sendStatus=:status ORDER BY lastUpdated DESC")
+    @Query("SELECT * FROM chatTable WHERE userOrg_user_userName=:username AND sendStatus=:status ORDER BY lastUpdated DESC")
     List<Chat> getAllDataForUser(String username, int status);
 
-    @Query("SELECT * FROM chatTable WHERE userName=:username AND sendStatus=:status ORDER BY :orderBy")
+    @Query("SELECT * FROM chatTable WHERE userOrg_user_userName=:username AND sendStatus=:status ORDER BY :orderBy")
     List<Chat> getAllDataForUser(String username, String orderBy, int status);
 
     @Query("SELECT * FROM chatTable WHERE collabroomId=:collabroomId ORDER BY :orderBy")

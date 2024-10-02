@@ -62,8 +62,9 @@ public interface ChatApiService {
                                         @Body Presence presence);
 
     @Headers({"Accept: application/json", "Content-Type: application/json"})
-    @POST("chat/{chatMsgId}/userorg/{requestingUserOrgId}/incident/{incidentId}/username/{chatUsername}")
+    @DELETE("chatmsgs/{collabroomId}/chat/{chatMsgId}/userorg/{requestingUserOrgId}/incident/{incidentId}/username/{chatUsername}")
     Call<ResponseBody> deleteChat(
+            @Path(value = "collabroomId", encoded = true) long collabroomId,
             @Path(value = "chatMsgId", encoded = true) long chatMsgId,
             @Path(value = "requestingUserOrgId", encoded = true) long requestingUserOrgId,
             @Path(value = "incidentId", encoded = true) long incidentId,

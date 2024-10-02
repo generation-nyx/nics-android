@@ -297,14 +297,13 @@ public class ChatFragment extends AppFragment {
 //        if (chat.getUserName() != mPreferences.getUserName()) {
 //            return;
 //        }
-        chat.setLastUpdated(System.currentTimeMillis());
 
         // Save a copy of the chat
         Chat cachedChat = mRepository.getChatByChatId(chat.getChatId());
         Timber.tag(DEBUG).d("Cached chat: %s", chat.getChatId());
 
         // Remove the chat from the local db, so that it removes it from the chat list.
-        mRepository.deleteChat(chat);
+        mRepository.softDelete(chat);
         Timber.tag(DEBUG).d("Removed local chat: %s", chat.getChatId());
 
         // Show a snackbar to give the user 4 seconds to undo the deletion.
@@ -321,11 +320,8 @@ public class ChatFragment extends AppFragment {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (event != DISMISS_EVENT_ACTION) {
-                    cachedChat.setSendStatus(SendStatus.DELETE);
-
-//                    cachedChat.setUserName(mPreferences.getUserName());
-
-                    mRepository.addChatToDatabase(cachedChat, result -> mMainHandler.post(() -> {
+                    Timber.tag(DEBUG).d("Finalizing delete of chat %s", cachedChat.getChatId());
+                    mRepository.deleteChat(cachedChat, result -> mMainHandler.post(() -> {
                         mNetworkRepository.deleteChats();
                     }));
                 }

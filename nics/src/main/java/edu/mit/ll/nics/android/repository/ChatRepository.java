@@ -109,6 +109,12 @@ public class ChatRepository {
     public void deleteChat(Chat chat) {
         chat.setIsDeleted(true);
         chat.setSendStatus(SendStatus.DELETE);
+        chat.setLastUpdated(System.currentTimeMillis());
+        addChatToDatabase(chat);
+    }
+
+    public void softDelete(Chat chat) {
+        chat.setSendStatus(SendStatus.DELETE);
         addChatToDatabase(chat);
     }
 

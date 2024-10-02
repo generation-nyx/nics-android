@@ -286,18 +286,18 @@ public class ChatWorkers {
             return CallbackToFutureAdapter.getFuture(completer -> {
                 long id = getInputData().getLong("id", -1L);
                 Chat chat = mRepository.getChatById(id);
-                long chatId = chat.getId();
+                long chatId = chat.getChatId();
                 String userName = mPreferences.getUserName();
                 long userOrgId = mPreferences.getUserOrgId();
 
-                chat.setSendStatus(SendStatus.DELETE);
-                mRepository.addChatToDatabase(chat);
+                // mRepository.deleteChat(chat);
 
                 Timber.tag(DEBUG).i("Adding chat " + id + " to delete queue.");
 
                 Call<ResponseBody> call = mApiService.deleteChat(
+                        chat.getCollabroomId(),
                         chatId,
-                        userOrgId,
+                        chat.getUserOrganization().getUserOrgId(),
                         chat.getIncidentId(),
                         userName
                 );

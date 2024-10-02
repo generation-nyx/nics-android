@@ -69,6 +69,8 @@ public class AuthCallback<T> extends RetryCallback<T> {
             LiveDataBus.publish(REFRESH_ACCESS_TOKEN);
             mCallback.onFailure(call, new Throwable("Authentication Token expired."));
         } else if (!isSuccessStatusCode(response.code())) {
+            Timber.tag(DEBUG).d("FAILURE RESPONSE:");
+            Timber.tag(DEBUG).d(response.toString());
             super.onFailure(call, new Throwable("Failure status code " + response.code()));
         } else {
             mCallback.onResponse(call, response);
